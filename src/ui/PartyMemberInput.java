@@ -2,6 +2,8 @@ package ui;
 
 import main.MainActivity;
 import main.Utils;
+import ui.extensions.ComboBoxFiltered;
+import ui.extensions.TextFieldLimiter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -109,11 +111,11 @@ public class PartyMemberInput extends JPanel{
 
             @Override
             public void focusLost(FocusEvent event) {
-                MainActivity.screen.memberSelector.updateListAssociations();
+                MainActivity.screen.partyInput.partyMemberSelector.updateListAssociations();
             }
         });
         species.addActionListener(e -> {
-            MainActivity.screen.memberSelector.updateListAssociations();
+            MainActivity.screen.partyInput.partyMemberSelector.updateListAssociations();
         });
         panel.add(species, cons);
 
