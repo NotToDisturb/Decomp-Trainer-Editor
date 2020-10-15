@@ -17,7 +17,7 @@ public class ComboBoxFiltered extends JComboBox{
     public ComboBoxFiltered(LinkedList<String> elements, String showAll){
         super(elements.toArray());
         setSelectedIndex(0);
-        setPrototypeDisplayValue(Utils.getLongestString(elements));
+        setPrototypeDisplayValue(Utils.getLongestString(elements.toArray(new String[0])));
         this.elements = elements;
         this.showAll = showAll.toLowerCase();
         setEditable(true);

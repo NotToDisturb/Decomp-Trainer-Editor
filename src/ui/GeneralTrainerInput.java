@@ -95,7 +95,7 @@ public class GeneralTrainerInput extends JPanel {
         cons.gridy++;
         LinkedList<String> values = new LinkedList<>(MainActivity.trainerClasses.keySet());
         classInput = new ComboBoxFiltered(values, "");
-        classInput.setPrototypeDisplayValue(Utils.getLongestString(new ArrayList<>(MainActivity.trainerClasses.keySet())));
+        classInput.setPrototypeDisplayValue(Utils.getLongestString(MainActivity.trainerClasses.keySet().toArray(new String[0])));
         pane.add(classInput, cons);
     }
 
@@ -128,7 +128,7 @@ public class GeneralTrainerInput extends JPanel {
             cons.gridy++;
             cons.fill = GridBagConstraints.NONE;
             ComboBoxFiltered itemInput = new ComboBoxFiltered(MainActivity.items, MainActivity.items.get(0));
-            itemInput.setPrototypeDisplayValue(Utils.getLongestString(MainActivity.items));
+            itemInput.setPrototypeDisplayValue(Utils.getLongestString(MainActivity.items.toArray(new String[0])));
             pane.add(itemInput, cons);
             itemsInput.add(itemInput);
         }
@@ -156,7 +156,7 @@ public class GeneralTrainerInput extends JPanel {
 
         cons.gridy++;
         picInput = new ComboBoxFiltered(MainActivity.picList, "");
-        picInput.setPrototypeDisplayValue(Utils.getLongestString(MainActivity.picList));
+        picInput.setPrototypeDisplayValue(Utils.getLongestString(MainActivity.picList.toArray(new String[0])));
         picInput.addActionListener(e -> {
             picDisplay.imagePath = MainActivity.picPaths.get(picInput.getSelectedItem());
             picDisplay.repaint();
@@ -205,7 +205,7 @@ public class GeneralTrainerInput extends JPanel {
 
         cons.gridy++;
         musicInput = new ComboBoxFiltered(MainActivity.music, "");
-        musicInput.setPrototypeDisplayValue(Utils.getLongestString(MainActivity.music));
+        musicInput.setPrototypeDisplayValue(Utils.getLongestString(MainActivity.music.toArray(new String[0])));
         pane.add(musicInput, cons);
         cons.gridy++;
         pane.add(Box.createVerticalStrut(30), cons);

@@ -133,7 +133,7 @@ public class PartyMemberInput extends JPanel{
         panel.add(Box.createVerticalStrut(5), cons);
 
         heldItem = new ComboBoxFiltered(MainActivity.items, MainActivity.items.get(0));
-        heldItem.setPrototypeDisplayValue(Utils.getLongestString(MainActivity.items));
+        heldItem.setPrototypeDisplayValue(Utils.getLongestString(MainActivity.items.toArray(new String[0])));
         panel.add(heldItem, cons);
 
         cons.gridy++;
@@ -153,7 +153,7 @@ public class PartyMemberInput extends JPanel{
             cons.gridy++;
             LinkedList<String> values = new LinkedList<>(MainActivity.moves.values());
             ComboBoxFiltered move = new ComboBoxFiltered(values, values.get(0));
-            move.setPrototypeDisplayValue(Utils.getLongestString(values));
+            move.setPrototypeDisplayValue(Utils.getLongestString(values.toArray(new String[0])));
             panel.add(move, cons);
             moves.add(move);
         }

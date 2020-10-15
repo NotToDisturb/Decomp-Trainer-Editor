@@ -14,8 +14,8 @@ public class Utils {
         return true;
     }
 
-    public static String getLongestString(List<String> list){
-        String longest = list.get(0);
+    public static String getLongestString(String[] list){
+        String longest = list[0];
         for(String element : list){
             if(element != null && element.length() > longest.length()) longest = element;
         }
