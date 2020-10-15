@@ -1,7 +1,6 @@
 package utils;
 
 import main.MainActivity;
-import ui.Screen;
 
 import javax.swing.*;
 import java.io.File;
@@ -15,7 +14,7 @@ public class DirectoryChooser {
         if(chooser.showOpenDialog(MainActivity.screen) == JFileChooser.APPROVE_OPTION){
             MainActivity.projectDirectory = chooser.getSelectedFile();
             MainActivity.screen.getContentPane().removeAll();
-            MainActivity.screen.initLoadProject();
+            MainActivity.screen.loadProject();
         }
     }
 }

@@ -50,9 +50,7 @@ public class PartyMember {
         String moves = "";
         for (int index = 0; index < this.moves.size(); index++) {
             moves += this.moves.get(index);
-            if (index != this.moves.size() - 1) {
-                moves += ", ";
-            }
+            if (index != this.moves.size() - 1) moves += ", ";
         }
         return "{" + moves + "}";
     }

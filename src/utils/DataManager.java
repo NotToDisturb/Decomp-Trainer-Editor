@@ -479,31 +479,4 @@ public class DataManager {
         }
         MainActivity.partyIndexes = DataManager.indexParties();
     }
-
-    /*public static void write(File file, String data){
-        FileWriter fr = null;
-        BufferedWriter br = null;
-        try{
-            fr = new FileWriter(file);
-            br = new BufferedWriter(fr);
-            br.write(data);
-        } catch (IOException exception) {
-            exception.printStackTrace();
-        }
-        finally{
-            try {
-                br.close();
-                fr.close();
-            }
-            catch (IOException exception) {
-                exception.printStackTrace();
-            }
-        }
-
-
-
-        try(FileWriter writer = new FileWriter(file)) {
-            writer.write("");
-        } catch (IOException e) {e.printStackTrace();}
-    }*/
 }

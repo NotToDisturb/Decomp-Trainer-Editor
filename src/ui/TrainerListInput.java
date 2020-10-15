@@ -2,9 +2,11 @@ package ui;
 
 import main.MainActivity;
 import main.Utils;
+import ui.extensions.SimplifiedDocumentFilter;
 import utils.DataManager;
 
 import javax.swing.*;
+import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -57,25 +59,15 @@ public class TrainerListInput extends JPanel {
         pane.add(Box.createVerticalStrut(5), cons);
         cons.gridy++;
         JTextField field = new JTextField();
-        field.addKeyListener(new KeyListener() {
+        ((PlainDocument) field.getDocument()).setDocumentFilter(new SimplifiedDocumentFilter(){
             @Override
-            public void keyTyped(KeyEvent event) {
-                String previousText, text;
-                previousText = text = field.getText();
-                if(String.valueOf(event.getKeyChar()).matches("[a-zA-Z]") || String.valueOf(event.getKeyChar()).equals("_")) text += event.getKeyChar();
-                Object[] filtered = getFilteredTrainers(text);
-                if(filtered.length == 0) SwingUtilities.invokeLater(() -> field.setText(previousText));
-                else{
-                    list.setModel(new DefaultComboBoxModel(filtered));
-                    field.setText(previousText);
+            protected boolean test(String text) {
+                if(text.matches("[a-zA-Z_]*")){
+                    list.setModel(new DefaultComboBoxModel(getFilteredTrainers(text)));
+                    return true;
                 }
+                return false;
             }
-
-            @Override
-            public void keyPressed(KeyEvent e) {}
-
-            @Override
-            public void keyReleased(KeyEvent e) {}
         });
         pane.add(field, cons);
     }

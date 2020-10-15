@@ -9,22 +9,14 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 public class Trainer {
-    public static final String[] fields = {"partyFlags", "trainerClass", "encounterMusic_gender", "trainerPic", "trainerName"
-            , "items", "doubleBattle", "aiFlags", "partySize", "party"};
+    public static final String[] fields = {"partyFlags", "trainerClass", "encounterMusic_gender", "trainerPic", "trainerName",
+                                           "items", "doubleBattle", "aiFlags", "partySize", "party"};
 
 
-    public String key;
-    public String partyFlags;
-    public String trainerClass;
-    public String music;
-    public String gender;
-    public String trainerPic;
-    public String trainerName;
+    public String key, partyFlags, trainerClass, music, gender, trainerPic, trainerName, partySize, partyName;
     public ArrayList<String> items;
     public boolean doubleBattle;
     public ArrayList<String> aiFlags;
-    public String partySize;
-    public String partyName;
     public LinkedList<PartyMember> party;
 
     public Trainer(String key, HashMap<String, String> values){
