@@ -59,7 +59,7 @@ public class PartyMember {
         boolean hasCustomMoves = false;
         LinkedList<String> keys = new LinkedList<>(MainActivity.moves.keySet());
         for (int index = 0; index < this.moves.size(); index++) {
-            if(!moves.get(index).equals(keys.get(0))) hasCustomMoves = true;
+            if(!moves.get(index).equals(MainActivity.moves.get(0))) hasCustomMoves = true;
         }
         return hasCustomMoves;
     }

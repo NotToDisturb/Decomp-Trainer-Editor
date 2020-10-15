@@ -2,6 +2,9 @@ package ui;
 
 import main.MainActivity;
 import types.Trainer;
+import ui.ai.AiFlagsPanel;
+import ui.list.TrainerListPanel;
+import ui.trainer.TrainerPanel;
 import utils.DataManager;
 import utils.DirectoryChooser;
 
@@ -9,8 +12,8 @@ import javax.swing.*;
 import java.awt.*;
 
 public class MainFrame extends JFrame {
-    public GeneralTrainerInput generalInput;
-    public AiFlagsInput aiInput;
+    public TrainerPanel generalInput;
+    public AiFlagsPanel aiInput;
     public PartyInput partyInput;
 
     public MainFrame(){
@@ -85,7 +88,7 @@ public class MainFrame extends JFrame {
     public void createEditor(JPanel panel){
         JPanel editor = new JPanel();
         editor.setLayout(new BorderLayout());
-        panel.add(new TrainerListInput(), BorderLayout.WEST);
+        panel.add(new TrainerListPanel(), BorderLayout.WEST);
         createEditorTabs(editor);
         panel.add(editor, BorderLayout.CENTER);
     }
@@ -95,9 +98,9 @@ public class MainFrame extends JFrame {
         editorBorders.setLayout(new BorderLayout());
         JTabbedPane tabbedEditor = new JTabbedPane();
         tabbedEditor.setBackground(Color.WHITE);
-        generalInput = new GeneralTrainerInput();
+        generalInput = new TrainerPanel();
         tabbedEditor.add("General", generalInput);
-        aiInput = new AiFlagsInput();
+        aiInput = new AiFlagsPanel();
         tabbedEditor.add("AI", aiInput);
         partyInput = new PartyInput();
         tabbedEditor.add("Party", partyInput);

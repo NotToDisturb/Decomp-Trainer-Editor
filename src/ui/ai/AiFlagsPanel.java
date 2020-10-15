@@ -1,4 +1,4 @@
-package ui;
+package ui.ai;
 
 import main.MainActivity;
 import types.Trainer;
@@ -6,12 +6,13 @@ import types.Trainer;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 
-public class AiFlagsInput extends JPanel {
-    private LinkedHashMap<String, JCheckBox> aiFlags = new LinkedHashMap<>();
+public class AiFlagsPanel extends JPanel {
+    private HashMap<String, FlagPanel> aiFlags = new LinkedHashMap<>();
 
-    public AiFlagsInput(){
+    public AiFlagsPanel(){
         setBackground(Color.WHITE);
         setLayout(new FlowLayout(FlowLayout.LEFT));
         add(Box.createHorizontalStrut(5));
@@ -25,20 +26,11 @@ public class AiFlagsInput extends JPanel {
         cons.gridy = 0;
         cons.fill = GridBagConstraints.BOTH;
         aiList.add(Box.createVerticalStrut(5), cons);
-        for(int index = 0; index < MainActivity.aiFlags.size(); index++){
-            String ai = MainActivity.aiFlags.get(index);
-            JPanel aiPanel = new JPanel();
-            aiPanel.setBackground(Color.WHITE);
-            aiPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-            JCheckBox aiCheck = new JCheckBox();
-            aiCheck.setBackground(Color.WHITE);
-
-            JLabel aiLabel = new JLabel(ai);
-            aiLabel.setHorizontalAlignment(JLabel.LEFT);
-            aiPanel.add(aiCheck); aiPanel.add(aiLabel);
+        for(String flag : MainActivity.aiFlags){
+            FlagPanel flagPanel = new FlagPanel(flag);
             cons.gridy++;
-            aiList.add(aiPanel, cons);
-            aiFlags.put(ai, aiCheck);
+            aiList.add(flagPanel, cons);
+            aiFlags.put(flag, flagPanel);
         }
         cons.gridy++;
         aiList.add(Box.createVerticalStrut(10), cons);

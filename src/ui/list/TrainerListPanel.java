@@ -1,12 +1,12 @@
-package ui;
+package ui.list;
 
 import main.MainActivity;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class TrainerListInput extends JPanel {
-    public TrainerListInput(){
+public class TrainerListPanel extends JPanel {
+    public TrainerListPanel(){
         setLayout(new BorderLayout());
         JPanel listPanel = new JPanel();
         listPanel.setLayout(new GridBagLayout());

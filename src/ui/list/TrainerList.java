@@ -1,4 +1,4 @@
-package ui;
+package ui.list;
 
 import main.MainActivity;
 import main.Utils;

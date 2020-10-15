@@ -1,4 +1,4 @@
-package ui;
+package ui.trainer;
 
 import main.MainActivity;
 import main.Utils;
@@ -12,18 +12,16 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-public class GeneralTrainerInput extends JPanel {
+public class TrainerPanel extends JPanel {
     public JTextField nameInput;
     public ComboBoxFiltered classInput;
     public JCheckBox doubleBattleCheck;
-    public LinkedList<ComboBoxFiltered> itemsInput = new LinkedList<>();
-    public JRadioButton maleButton;
-    public JRadioButton femaleButton;
+    public ItemsPanel itemsPanel;
+    public GenderPanel genderPanel;
     public ComboBoxFiltered musicInput;
-    public ImagePanel picDisplay;
-    public ComboBoxFiltered picInput;
+    public TrainerPicPanel picPanel;
 
-    public GeneralTrainerInput(){
+    public TrainerPanel(){
         setBackground(Color.WHITE);
         setLayout(new FlowLayout(FlowLayout.LEFT));
         add(Box.createHorizontalStrut(5));
@@ -115,81 +113,18 @@ public class GeneralTrainerInput extends JPanel {
     }
 
     public void createItemsInput(JPanel pane, GridBagConstraints cons){
-        cons.gridy++;
-        pane.add(Box.createVerticalStrut(30), cons);
-        cons.gridy++;
-        JLabel itemsLabel = new JLabel("Items: ");
-        itemsLabel.setHorizontalAlignment(JLabel.LEFT);
-        pane.add(itemsLabel, cons);
-        for(int index = 0; index < 4; index++){
-            cons.gridy++;
-            pane.add(Box.createVerticalStrut(5), cons);
-
-            cons.gridy++;
-            cons.fill = GridBagConstraints.NONE;
-            ComboBoxFiltered itemInput = new ComboBoxFiltered(MainActivity.items, MainActivity.items.get(0));
-            itemInput.setPrototypeDisplayValue(Utils.getLongestString(MainActivity.items.toArray(new String[0])));
-            pane.add(itemInput, cons);
-            itemsInput.add(itemInput);
-        }
-        cons.gridy++;
-        pane.add(Box.createVerticalStrut(10), cons);
+        itemsPanel = new ItemsPanel();
+        cons.gridy++; pane.add(itemsPanel, cons);
     }
 
     public void createTrainerPicInput(JPanel pane, GridBagConstraints cons){
-        pane.add(Box.createVerticalStrut(30), cons);
-        cons.gridy++;
-        JLabel picLabel = new JLabel("Trainer pic: ");
-        picLabel.setHorizontalAlignment(JLabel.LEFT);
-        pane.add(picLabel, cons);
-
-        cons.gridy++;
-        pane.add(Box.createVerticalStrut(10), cons);
-
-        cons.gridy++;
-        picDisplay = new ImagePanel();
-        picDisplay.setBackground(Color.WHITE);
-        pane.add(picDisplay, cons);
-
-        cons.gridy++;
-        pane.add(Box.createVerticalStrut(10), cons);
-
-        cons.gridy++;
-        picInput = new ComboBoxFiltered(MainActivity.picList, "");
-        picInput.setPrototypeDisplayValue(Utils.getLongestString(MainActivity.picList.toArray(new String[0])));
-        picInput.addActionListener(e -> {
-            picDisplay.imagePath = MainActivity.picPaths.get(picInput.getSelectedItem());
-            picDisplay.repaint();
-        });
-        pane.add(picInput, cons);
+        picPanel = new TrainerPicPanel();
+        cons.gridy++; pane.add(picPanel, cons);
     }
 
     public void createGenderInput(JPanel pane, GridBagConstraints cons){
-        cons.gridy++;
-        pane.add(Box.createVerticalStrut(30), cons);
-        cons.gridy++;
-        JLabel genderLabel = new JLabel("Gender: ");
-        genderLabel.setHorizontalAlignment(JLabel.LEFT);
-        pane.add(genderLabel, cons);
-
-        cons.gridy++;
-        pane.add(Box.createVerticalStrut(5), cons);
-
-        cons.gridy++;
-        maleButton = new JRadioButton("Male");
-        maleButton.setBackground(Color.WHITE);
-        maleButton.addActionListener(event -> {
-            femaleButton.setSelected(false);
-        });
-        pane.add(maleButton, cons);
-
-        cons.gridy++;
-        femaleButton = new JRadioButton("Female");
-        femaleButton.setBackground(Color.WHITE);
-        femaleButton.addActionListener(event -> {
-            maleButton.setSelected(false);
-        });
-        pane.add(femaleButton, cons);
+        genderPanel = new GenderPanel();
+        cons.gridy++; pane.add(genderPanel, cons);
     }
 
     public void createMusicInput(JPanel pane, GridBagConstraints cons){
@@ -215,18 +150,13 @@ public class GeneralTrainerInput extends JPanel {
         nameInput.setText(trainer.trainerName);
         classInput.setSelectedItem(trainer.trainerClass);
         doubleBattleCheck.setSelected(trainer.doubleBattle);
-        picDisplay.imagePath = MainActivity.picPaths.get(trainer.trainerPic);
-        picInput.setSelectedItem(trainer.trainerPic);
+        picPanel.setImage(MainActivity.picPaths.get(trainer.trainerPic));
+        picPanel.setSelectedPic(trainer.trainerPic);
         musicInput.setSelectedItem(trainer.music);
-        boolean male = trainer.gender.equals("");
-        maleButton.setSelected(male);
-        femaleButton.setSelected(!male);
-        for(int index = 0; index < 4; index++){
-            String item = MainActivity.items.get(0);
-            if(trainer.items.size() > 0){
-                item = trainer.items.get(index);
-            }
-            itemsInput.get(index).setSelectedItem(item);
+        genderPanel.doSelection(trainer.gender);
+        for(int index = 0; index < MainActivity.ITEMS_MAX; index++){
+            String item = trainer.items.size() > 0 ? trainer.items.get(index) : MainActivity.items.get(0);
+            itemsPanel.setSelectedItem(index, item);
         }
     }
 
@@ -234,18 +164,16 @@ public class GeneralTrainerInput extends JPanel {
         trainer.trainerName = nameInput.getText();
         trainer.trainerClass = classInput.getSelectedItem().toString();
         trainer.doubleBattle = doubleBattleCheck.isSelected();
-        trainer.trainerPic = picInput.getSelectedItem().toString();
+        trainer.trainerPic = picPanel.getSelectedPic();
         trainer.music = musicInput.getSelectedItem().toString();
-        String gender = "";
-        if(femaleButton.isSelected()) gender += "F_TRAINER_FEMALE";
-        trainer.gender = gender;
+        trainer.gender = genderPanel.getGender();
 
         ArrayList<String> items = new ArrayList<>();
         boolean areAllItemsNone = true;
-        for(ComboBoxFiltered item : itemsInput){
-            JTextField field = (JTextField) item.getEditor().getEditorComponent();
-            if(!field.getText().equals(MainActivity.items.get(0))) areAllItemsNone = false;
-            items.add(field.getText());
+        for(ItemPanel itemPanel : itemsPanel.getSelectedItems()){
+            String item = itemPanel.getSelectedItem();
+            if(!item.equals(MainActivity.items.get(0))) areAllItemsNone = false;
+            items.add(item);
         }
         if(areAllItemsNone) items = new ArrayList<>();
         trainer.items = items;

@@ -1,29 +1,29 @@
 package ui.extensions;
 
-import main.MainActivity;
 import main.Utils;
 
 import javax.swing.*;
+import javax.swing.text.PlainDocument;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.LinkedList;
 
-public class ComboBoxFiltered extends JComboBox{
+public class ComboBoxFiltered extends JComboBox<String>{
     private LinkedList<String> elements;
     private String showAll = "";
 
     public ComboBoxFiltered(LinkedList<String> elements, String showAll){
-        super(elements.toArray());
+        super(elements.toArray(new String[0]));
         setSelectedIndex(0);
         setPrototypeDisplayValue(Utils.getLongestString(elements.toArray(new String[0])));
         this.elements = elements;
         this.showAll = showAll.toLowerCase();
         setEditable(true);
         configFocus();
-        listFilter();
-        pressEnter();
+        configFilter();
+        configPressEnter();
     }
 
     private void configFocus(){
@@ -41,13 +41,25 @@ public class ComboBoxFiltered extends JComboBox{
 
             @Override
             public void focusLost(FocusEvent e) {
-                autoComplete(field);
+                autocomplete(field);
             }
         });
     }
 
-    private void listFilter(){
+    private void configFilter(){
         JTextField field = (JTextField) getEditor().getEditorComponent();
+        /*((PlainDocument) field.getDocument()).setDocumentFilter(new SimplifiedDocumentFilter(){
+            @Override
+            protected boolean test(String text) {
+                //System.out.println(text);
+
+                if(!text.matches("[a-zA-Z0-9_]*")) return false;
+                String[] filtered = showAll.equals("") ? elements.toArray(new String[0]) : getFilteredElements(text);
+                setModel(new DefaultComboBoxModel(filtered));
+                setPopupVisible(true);
+                return true;
+            }
+        });*/
         field.addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(KeyEvent event) {
@@ -72,29 +84,30 @@ public class ComboBoxFiltered extends JComboBox{
         });
     }
 
-    public void pressEnter(){
+    public void configPressEnter(){
         JTextField field = (JTextField) getEditor().getEditorComponent();
         field.addActionListener(event ->{
-            autoComplete(field);
+            autocomplete(field);
         });
     }
 
-    public void autoComplete(JTextField field){
+    public void autocomplete(JTextField field){
         String text = field.getText();
-        Object[] filtered = getFilteredElements(text);
-        if(filtered.length == 0) filtered = elements.toArray();
+        String[] filtered = getFilteredElements(text);
+        if(filtered.length == 0) filtered = elements.toArray(new String[0]);
         setModel(new DefaultComboBoxModel(filtered));
         setSelectedIndex(0);
     }
 
-    private Object[] getFilteredElements(String text){
+    private String[] getFilteredElements(String text){
+        //Base case
+        if(text.equals(showAll)) return this.elements.toArray(new String[0]);
+
         LinkedList<String> elements = new LinkedList<>();
         text = text.toLowerCase();
         for(String element : this.elements){
-            if(element.toLowerCase().contains(text) || text.equals(showAll)){
-                elements.add(element);
-            }
+            if(element.toLowerCase().contains(text)) elements.add(element);
         }
-        return elements.toArray();
+        return elements.toArray(new String[0]);
     }
 }

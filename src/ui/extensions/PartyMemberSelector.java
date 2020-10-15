@@ -49,7 +49,7 @@ public class PartyMemberSelector extends JPanel {
         cons.gridy++;
         associationList = new JList();
         associationList.setCellRenderer(new SpeciesRenderer());
-        associationList.setPrototypeCellValue(Utils.getLongestString(new LinkedList<>(MainActivity.species.values())));
+        associationList.setPrototypeCellValue(Utils.getLongestString(MainActivity.species.values().toArray(new String[0])));
         associationList.setBorder(BorderFactory.createLineBorder(Color.GRAY));
         associationList.addListSelectionListener(event -> {
             if(!event.getValueIsAdjusting() && getSelectedIndex() != -1){
