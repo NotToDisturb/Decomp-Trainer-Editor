@@ -15,6 +15,9 @@ public class MainActivity {
     public static File projectDirectory = null;
 
     public static final int ITEMS_MAX = 4;
+    public static final int PARTY_MAX = 6;
+    public static final int NAME_MAX = 11;
+    public static final int MOVES_MAX = 4;
 
     public static String currentTrainer = null;
     public static HashMap<String, Integer> trainerIndexes, partyIndexes;
