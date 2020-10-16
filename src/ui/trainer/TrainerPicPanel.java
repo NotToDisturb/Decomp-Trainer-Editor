@@ -35,7 +35,7 @@ public class TrainerPicPanel extends JPanel {
         cons.gridy++; add(Box.createVerticalStrut(10), cons);
 
         
-        picCombo = new ComboBoxFiltered(MainActivity.picList, "");
+        picCombo = new ComboBoxFiltered(MainActivity.picList);
         picCombo.setPrototypeDisplayValue(Utils.getLongestString(MainActivity.picList.toArray(new String[0])));
         cons.gridy++; add(picCombo, cons);
 

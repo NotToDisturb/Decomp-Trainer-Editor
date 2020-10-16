@@ -4,17 +4,14 @@ import main.Utils;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
-import javax.swing.event.PopupMenuEvent;
-import javax.swing.event.PopupMenuListener;
 import javax.swing.text.PlainDocument;
-import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.LinkedList;
 
 public class ComboBoxFiltered extends JComboBox<String>{
     private LinkedList<String> elements;
-    private String showAll = "";
+    private String showAll;
     private boolean shouldApplyEvent = true;
 
     public ComboBoxFiltered(LinkedList<String> elements, String showAll){
@@ -27,6 +24,10 @@ public class ComboBoxFiltered extends JComboBox<String>{
         configFocus();
         configFilter();
         configPressEnter();
+    }
+
+    public ComboBoxFiltered(LinkedList<String> elements){
+        this(elements, "");
     }
 
     public void setTypingModel(ComboBoxModel<String> model) {
@@ -77,22 +78,20 @@ public class ComboBoxFiltered extends JComboBox<String>{
 
     public void configPressEnter(){
         JTextField field = (JTextField) getEditor().getEditorComponent();
-        field.addActionListener(event ->{
-            autocomplete(field);
-        });
+        field.addActionListener(event -> autocomplete(field));
     }
 
     public void autocomplete(JTextField field){
         String text = field.getText();
         String[] filtered = getFilteredElements(text);
         if(filtered.length == 0) filtered = elements.toArray(new String[0]);
-        setModel(new DefaultComboBoxModel(filtered));
-        setSelectedIndex(0);
+        if(!showAll.equals("")) setModel(new DefaultComboBoxModel(filtered));
+        setSelectedItem(filtered[0]);
     }
 
     private String[] getFilteredElements(String text){
         //Base case
-        if(text.equals(showAll)) return this.elements.toArray(new String[0]);
+        if(text.equalsIgnoreCase(showAll)) return this.elements.toArray(new String[0]);
 
         LinkedList<String> elements = new LinkedList<>();
         text = text.toLowerCase();

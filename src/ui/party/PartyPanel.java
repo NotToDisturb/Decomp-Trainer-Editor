@@ -25,8 +25,8 @@ public class PartyPanel extends JPanel {
 
     public void loadTrainerPartyData(Trainer trainer){
         partyMemberListPanel.clearAssociations();
-        for(int index = 0; index < trainer.party.size(); index++){
-            loadPartyMemberData(trainer.party.get(index));
+        for(int memberIndex = 0; memberIndex < trainer.party.size(); memberIndex++){
+            loadPartyMemberData(trainer.party.get(memberIndex));
         }
         partyMemberListPanel.setSelectedIndex(0);
     }
@@ -37,8 +37,8 @@ public class PartyPanel extends JPanel {
         memberInputs.level.setText(member.level);
         memberInputs.species.setSelectedItem(member.species);
         if(!member.heldItem.equals("")) memberInputs.heldItem.setSelectedItem(member.heldItem);
-        for(int subindex = 0; subindex < member.moves.size(); subindex++){
-            memberInputs.moves.get(subindex).setSelectedItem(MainActivity.moves.get(member.moves.get(subindex)));
+        for(int moveIndex = 0; moveIndex < member.moves.size(); moveIndex++){
+            memberInputs.moves.get(moveIndex).setSelectedItem(MainActivity.moves.get(member.moves.get(moveIndex)));
         }
         partyMemberListPanel.addAssociation(memberInputs);
     }

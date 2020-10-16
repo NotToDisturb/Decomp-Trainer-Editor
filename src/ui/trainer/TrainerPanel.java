@@ -92,7 +92,7 @@ public class TrainerPanel extends JPanel {
 
         cons.gridy++;
         LinkedList<String> values = new LinkedList<>(MainActivity.trainerClasses.keySet());
-        classInput = new ComboBoxFiltered(values, "");
+        classInput = new ComboBoxFiltered(values);
         classInput.setPrototypeDisplayValue(Utils.getLongestString(MainActivity.trainerClasses.keySet().toArray(new String[0])));
         pane.add(classInput, cons);
     }
@@ -139,7 +139,7 @@ public class TrainerPanel extends JPanel {
         pane.add(Box.createVerticalStrut(5), cons);
 
         cons.gridy++;
-        musicInput = new ComboBoxFiltered(MainActivity.music, "");
+        musicInput = new ComboBoxFiltered(MainActivity.music);
         musicInput.setPrototypeDisplayValue(Utils.getLongestString(MainActivity.music.toArray(new String[0])));
         pane.add(musicInput, cons);
         cons.gridy++;
@@ -175,7 +175,6 @@ public class TrainerPanel extends JPanel {
             if(!item.equals(MainActivity.items.get(0))) areAllItemsNone = false;
             items.add(item);
         }
-        if(areAllItemsNone) items = new ArrayList<>();
-        trainer.items = items;
+        trainer.items = areAllItemsNone ? new ArrayList<>() : items;
     }
 }
