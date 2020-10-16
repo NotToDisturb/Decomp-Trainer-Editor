@@ -10,7 +10,7 @@ import java.nio.file.Files;
 import java.util.*;
 
 public class DataManager {
-    public static String readFile(File file){
+    public static final String readFile(File file){
         String data = "";
         try {
             FileReader fr = new FileReader(file);
@@ -27,7 +27,7 @@ public class DataManager {
         return data;
     }
 
-    public static LinkedHashMap<String, TrainerClass> loadTrainerClasses(){
+    public static final LinkedHashMap<String, TrainerClass> loadTrainerClasses(){
         File file = new File(MainActivity.projectDirectory + File.separator + "src"
                 + File.separator + "data" + File.separator + "text" + File.separator + "trainer_class_names.h");
         LinkedHashMap<String, TrainerClass> trainerClasses = new LinkedHashMap<>();
@@ -52,7 +52,7 @@ public class DataManager {
         return trainerClasses;
     }
 
-    public static LinkedList<String> loadItems(){
+    public static final LinkedList<String> loadItems(){
         File file = new File(MainActivity.projectDirectory
                 + File.separator + "include" + File.separator + "constants" + File.separator + "items.h");
         LinkedList<String> items = new LinkedList<>();
@@ -83,7 +83,7 @@ public class DataManager {
         return items;
     }
 
-    public static LinkedHashMap<String, String> loadMoves(){
+    public static final LinkedHashMap<String, String> loadMoves(){
         File file = new File(MainActivity.projectDirectory + File.separator + "src"
                 + File.separator + "data" + File.separator + "text" + File.separator + "move_names.h");
         LinkedHashMap<String, String> moves = new LinkedHashMap<>();
@@ -117,7 +117,7 @@ public class DataManager {
         return moves;
     }
 
-    public static LinkedHashMap<String, String> loadSpecies(){
+    public static final LinkedHashMap<String, String> loadSpecies(){
         File file = new File(MainActivity.projectDirectory + File.separator + "src"
                 + File.separator + "data" + File.separator + "text" + File.separator + "species_names.h");
         LinkedHashMap<String, String> species = new LinkedHashMap<>();
@@ -151,7 +151,7 @@ public class DataManager {
         return species;
     }
 
-    public static LinkedList<String> loadMusic(){
+    public static final LinkedList<String> loadMusic(){
         File file = new File(MainActivity.projectDirectory + File.separator + "include"
                 + File.separator + "constants" + File.separator + "trainers.h");
         LinkedList<String> music = new LinkedList<>();
@@ -180,7 +180,7 @@ public class DataManager {
         return music;
     }
 
-    public static LinkedList<String> loadAiFlags(){
+    public static final LinkedList<String> loadAiFlags(){
         File file = new File(MainActivity.projectDirectory + File.separator + "include"
                 + File.separator + "constants" + File.separator + "battle_ai.h");
         LinkedList<String> aiFlags = new LinkedList<>();
@@ -209,7 +209,7 @@ public class DataManager {
         return aiFlags;
     }
 
-    public static LinkedList<String> loadTrainerPicsList(){
+    public static final LinkedList<String> loadTrainerPicsList(){
         File file = new File(MainActivity.projectDirectory + File.separator + "include"
                 + File.separator + "constants" + File.separator + "trainers.h");
         LinkedList<String> picList = new LinkedList<>();
@@ -238,7 +238,7 @@ public class DataManager {
         return picList;
     }
 
-    public static LinkedHashMap<String, String> loadTrainerPicsPaths(){
+    public static final LinkedHashMap<String, String> loadTrainerPicsPaths(){
         File file = new File(MainActivity.projectDirectory + File.separator + "src"
                 + File.separator + "data" + File.separator + "graphics" + File.separator + "trainers.h");
         LinkedHashMap<String, String> picAssociations = loadTrainerPicsAssociation();
@@ -274,7 +274,7 @@ public class DataManager {
         return picPaths;
     }
 
-    public static LinkedHashMap<String, String> loadTrainerPicsAssociation(){
+    public static final LinkedHashMap<String, String> loadTrainerPicsAssociation(){
         File file = new File(MainActivity.projectDirectory + File.separator + "src"
                 + File.separator + "data" + File.separator + "trainer_graphics" + File.separator + "front_pic_tables.h");
         LinkedHashMap<String, String> picAssociations = new LinkedHashMap<>();
@@ -307,7 +307,7 @@ public class DataManager {
         return picAssociations;
     }
 
-    public static LinkedHashMap<String, Integer> indexTrainers(){
+    public static final LinkedHashMap<String, Integer> indexTrainers(){
         File file = new File(MainActivity.projectDirectory
                 + File.separator + "src" + File.separator + "data" + File.separator + "trainers.h");
         LinkedHashMap<String, Integer> trainerIndexes = new LinkedHashMap<>();
@@ -341,7 +341,7 @@ public class DataManager {
         return trainerIndexes;
     }
 
-    public static Trainer loadTrainer(String name){
+    public static final Trainer loadTrainer(String name){
         String trainers = DataManager.readFile(new File(MainActivity.projectDirectory
                 + File.separator + "src" + File.separator + "data" + File.separator + "trainers.h"));
 
@@ -366,7 +366,7 @@ public class DataManager {
         return new Trainer(name, values);
     }
 
-    public static void saveTrainer(Trainer trainer){
+    public static final void saveTrainer(Trainer trainer){
         File file = new File(MainActivity.projectDirectory
                 + File.separator + "src" + File.separator + "data" + File.separator + "trainers.h");
         String trainers = DataManager.readFile(file);
@@ -391,7 +391,7 @@ public class DataManager {
         saveParty(trainer);
     }
 
-    public static LinkedHashMap<String, Integer> indexParties(){
+    public static final LinkedHashMap<String, Integer> indexParties(){
         File file = new File(MainActivity.projectDirectory
                 + File.separator + "src" + File.separator + "data" + File.separator + "trainer_parties.h");
         LinkedHashMap<String, Integer> partyIndexes = new LinkedHashMap<>();
@@ -426,7 +426,7 @@ public class DataManager {
         return partyIndexes;
     }
 
-    public static LinkedList<PartyMember> loadParty(String name){
+    public static final LinkedList<PartyMember> loadParty(String name){
         String parties = DataManager.readFile(new File(MainActivity.projectDirectory
                 + File.separator + "src" + File.separator + "data" + File.separator + "trainer_parties.h"));
 
@@ -458,7 +458,7 @@ public class DataManager {
         return members;
     }
 
-    public static void saveParty(Trainer trainer){
+    public static final void saveParty(Trainer trainer){
         File file = new File(MainActivity.projectDirectory
                 + File.separator + "src" + File.separator + "data" + File.separator + "trainer_parties.h");
         String parties = DataManager.readFile(file);

@@ -2,7 +2,7 @@ package ui.list;
 
 import main.MainActivity;
 import ui.extensions.AlphanumericUnderscoreFilter;
-import ui.extensions.ChangeListener;
+import ui.extensions.SimplifiedDocumentListener;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class TrainerListSearchBar extends JTextField {
     public TrainerListSearchBar(TrainerList list){
         ((PlainDocument) getDocument()).setDocumentFilter(new AlphanumericUnderscoreFilter());
-        getDocument().addDocumentListener(new ChangeListener(){
+        getDocument().addDocumentListener(new SimplifiedDocumentListener(){
             @Override
             public void changedUpdate(DocumentEvent event){
                 SwingUtilities.invokeLater(() -> list.setModel(new DefaultComboBoxModel(getFilteredTrainers(getText()))));
@@ -20,7 +20,7 @@ public class TrainerListSearchBar extends JTextField {
         });
     }
 
-    private String[] getFilteredTrainers(String text){
+    private final String[] getFilteredTrainers(String text){
         ArrayList<String> elements = new ArrayList<>();
         String[] keys = MainActivity.trainerIndexes.keySet().toArray(new String[0]);
         text = text.toLowerCase();

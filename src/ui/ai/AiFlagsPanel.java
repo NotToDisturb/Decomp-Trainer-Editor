@@ -37,14 +37,14 @@ public class AiFlagsPanel extends JPanel {
         add(aiList, BorderLayout.CENTER);
     }
 
-    public void loadTrainerAiData(Trainer trainer){
+    public final void loadTrainerAiData(Trainer trainer){
         for(int index = 0; index < MainActivity.aiFlags.size(); index++){
             String flag = MainActivity.aiFlags.get(index);
             aiFlags.get(flag).setSelected(trainer.aiFlags.contains(flag));
         }
     }
 
-    public void saveTrainerAiData(Trainer trainer){
+    public final void saveTrainerAiData(Trainer trainer){
         ArrayList<String> aiFlags = new ArrayList<>();
         for(int index = 0; index < MainActivity.aiFlags.size(); index++){
             String flag = MainActivity.aiFlags.get(index);

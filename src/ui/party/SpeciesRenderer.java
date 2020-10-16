@@ -1,4 +1,4 @@
-package ui.extensions;
+package ui.party;
 
 import main.MainActivity;
 import types.PartyMember;
@@ -7,13 +7,30 @@ import javax.swing.*;
 import java.awt.*;
 
 public class SpeciesRenderer extends JLabel implements ListCellRenderer<PartyMember>{
+    private final PartyPanel panel;
+
+    public SpeciesRenderer(PartyPanel panel){
+        this.panel = panel;
+    }
 
     @Override
-    public Component getListCellRendererComponent(JList<? extends PartyMember> list, PartyMember value, int index, boolean isSelected, boolean cellHasFocus) {
+    public final Component getListCellRendererComponent(JList<? extends PartyMember> list, PartyMember value, int index, boolean isSelected, boolean cellHasFocus) {
         setOpaque(true);
-        String species = MainActivity.species.get(value.species);
-        String text = species == null ? value.species : " " +  species;
-        setText(text);
+
+        String display;
+        String savedSpecies = MainActivity.species.get(value.species);
+
+        if(value == panel.getCurrentLoaded()){
+            String species = MainActivity.species.get(panel.getSpeciesText());
+            if(species != null) display = " " + species;
+            else{
+                if(savedSpecies != null) display = " " + savedSpecies;
+                else display = " " + value.species;
+            }
+        }
+        else display = savedSpecies != null ? " " + savedSpecies : " " + value.species;
+
+        setText(display);
 
         if (isSelected) {
             setBackground(list.getSelectionBackground());
@@ -27,25 +44,3 @@ public class SpeciesRenderer extends JLabel implements ListCellRenderer<PartyMem
         return this;
     }
 }
-
-/*public class SpeciesRenderer extends JLabel implements ListCellRenderer<String>{
-
-    @Override
-    public Component getListCellRendererComponent(JList<? extends String> list, String value, int index, boolean isSelected, boolean cellHasFocus) {
-        setOpaque(true);
-        String species = MainActivity.species.get(value);
-        String text = species == null ? value : " " +  species;
-        setText(text);
-
-        if (isSelected) {
-            setBackground(list.getSelectionBackground());
-            setForeground(list.getSelectionForeground());
-        }
-        else {
-            setBackground(list.getBackground());
-            setForeground(list.getForeground());
-        }
-
-        return this;
-    }
-}*/

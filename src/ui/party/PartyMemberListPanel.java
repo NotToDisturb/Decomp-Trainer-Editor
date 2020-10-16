@@ -3,32 +3,31 @@ package ui.party;
 import main.MainActivity;
 import main.Utils;
 import types.PartyMember;
-import ui.extensions.SpeciesRenderer;
+import ui.MainFrame;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.LinkedList;
 
 public class PartyMemberListPanel extends JPanel {
-    private int maxAssociations;
-    private boolean fillAssociations;
-    private JList associationList;
-    private JPanel associationPanel;
-    public LinkedList<PartyMemberPanel> associations = new LinkedList<>();
+    
+    private JList<PartyMember> partyList;
+    private int membersCount = 0;
 
-    public PartyMemberListPanel(int maxAssociations, boolean fillAssociations){
-        this.maxAssociations = maxAssociations;
-        this.fillAssociations = fillAssociations;
+    private final MainFrame frame;
+    private final PartyPanel panel;
+
+    public PartyMemberListPanel(MainFrame frame, PartyPanel panel){
+        this.frame = frame;
+        this.panel = panel;
+
         setBackground(Color.WHITE);
         setLayout(new FlowLayout(FlowLayout.LEFT));
         createListPanel();
         add(Box.createHorizontalStrut(5));
-        associationPanel = new JPanel();
-        associationPanel.setBackground(Color.WHITE);
-        add(associationPanel);
     }
 
-    public void createListPanel(){
+    private final void createListPanel(){
         JPanel listPanel = new JPanel();
         listPanel.setBackground(Color.WHITE);
         listPanel.setLayout(new GridBagLayout());
@@ -44,57 +43,58 @@ public class PartyMemberListPanel extends JPanel {
         add(listPanel);
     }
 
-    public void createList(JPanel pane, GridBagConstraints cons){
+    private final void createList(JPanel pane, GridBagConstraints cons){
         pane.add(Box.createRigidArea(new Dimension(100, 10)), cons);
         cons.gridy++;
-        associationList = new JList();
-        associationList.setCellRenderer(new SpeciesRenderer());
-        associationList.setPrototypeCellValue(Utils.getLongestString(MainActivity.species.values().toArray(new String[0])));
-        associationList.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-        associationList.addListSelectionListener(event -> {
-            if(!event.getValueIsAdjusting() && getSelectedIndex() != -1){
-                if(!associationList.getSelectedValue().toString().equals(" ")) {
-                    associationPanel.removeAll();
-                    associationPanel.add(associations.get(getSelectedIndex()));
-                    MainActivity.mainFrame.repaint();
+        partyList = new JList<>();
+        partyList.setCellRenderer(new SpeciesRenderer(panel));
+        partyList.setPrototypeCellValue(new PartyMember(Utils.getLongestString(MainActivity.species.values().toArray(new String[0]))));
+        partyList.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+        partyList.addListSelectionListener(event -> {
+            if(!event.getValueIsAdjusting() && partyList.getSelectedIndex() != -1){
+                if(!partyList.getSelectedValue().species.equals(" ")) {
+                    panel.switchPartyMemberData(partyList.getSelectedValue());
+                    frame.repaint();
                 }
             }
         });
-        pane.add(associationList, cons);
+        pane.add(partyList, cons);
     }
 
-    public void createAddButton(JPanel pane, GridBagConstraints cons){
+    private final void createAddButton(JPanel pane, GridBagConstraints cons){
         cons.gridy++;
         pane.add(Box.createVerticalStrut(5), cons);
         cons.gridy++;
         JButton add = new JButton("Add");
         add.addActionListener(event ->{
-            associationPanel.removeAll();
-            MainActivity.mainFrame.partyPanel.loadPartyMemberData(new PartyMember());
-            setSelectedIndex(associations.size() - 1);
+            if(membersCount < MainActivity.PARTY_MAX) {
+                PartyMember member = new PartyMember();
+                addToPartyList(member);
+                panel.loadPartyMemberData(member);
+                partyList.setSelectedIndex(membersCount - 1);
+            }
         });
         pane.add(add, cons);
     }
 
-    public void createRemoveButton(JPanel pane, GridBagConstraints cons){
+    private final void createRemoveButton(JPanel pane, GridBagConstraints cons){
         cons.gridy++;
         pane.add(Box.createVerticalStrut(5), cons);
         cons.gridy++;
         JButton remove = new JButton("Remove");
         remove.addActionListener(event ->{
-            if(associations.size() - 1 != 0){
-                associationPanel.removeAll();
-                int index = getSelectedIndex() != -1 ? getSelectedIndex() : associations.size() - 1;
-                removeAssociation(index);
-                int substractFromIndex = index != 0 ? 1 : 0;
-                setSelectedIndex(index - substractFromIndex);
-                revalidate();
+            if(membersCount - 1 > 0){
+                int index = partyList.getSelectedIndex();
+                index = index != -1 ? index : membersCount - 1;
+                if(partyList.getModel().getElementAt(index).equals(" ")) return;
+                removeFromPartyList(index);
+                partyList.setSelectedIndex(index - (index - 1 >= 0 ? index - 1 : 0));
             }
         });
         pane.add(remove, cons);
     }
 
-    public void createMoveButtons(JPanel pane, GridBagConstraints cons){
+    private final void createMoveButtons(JPanel pane, GridBagConstraints cons){
         cons.gridy++;
         pane.add(Box.createVerticalStrut(5), cons);
         cons.gridy++;
@@ -112,13 +112,13 @@ public class PartyMemberListPanel extends JPanel {
         pane.add(Box.createVerticalStrut(10), cons);
     }
 
-    public void createMoveUpButton(JPanel pane, GridBagConstraints cons){
+    private final void createMoveUpButton(JPanel pane, GridBagConstraints cons){
         JButton moveUp = new JButton("Move up");
         moveUp.addActionListener(event ->{
-            int index = getSelectedIndex();
-            if(index > 0 && associations.size() > 1){
-                insertAssociation(removeAssociation(index), index - 1);
-                setSelectedIndex(index - 1);
+            int index = partyList.getSelectedIndex();
+            if(index > 0 && membersCount > 1){
+                moveInPartyList(index, index - 1);
+                partyList.setSelectedIndex(index - 1);
             }
         });
         pane.add(moveUp, cons);
@@ -126,101 +126,71 @@ public class PartyMemberListPanel extends JPanel {
         pane.add(Box.createHorizontalStrut(5), cons);
     }
 
-    public void createMoveDownButton(JPanel pane, GridBagConstraints cons){
+    private final void createMoveDownButton(JPanel pane, GridBagConstraints cons){
         cons.gridx++;
         JButton moveDown = new JButton("Move down");
         moveDown.addActionListener(event ->{
-            int index = getSelectedIndex();
-            if(index >= 0 && index < associations.size() - 1 && associations.size() > 1){
-                if(index == associations.size() - 2) addAssociation(removeAssociation(index));
-                else insertAssociation(removeAssociation(index), index + 1);
-                setSelectedIndex(index + 1);
+            int index = partyList.getSelectedIndex();
+            if(index < membersCount - 1 && membersCount > 1){
+                moveInPartyList(index, index + 1);
+                partyList.setSelectedIndex(index + 1);
             }
         });
         pane.add(moveDown, cons);
     }
 
-    public void setSelectedIndex(int index){
-        associationList.setSelectedIndex(index);
+    public final int getMembersCount(){
+        return membersCount;
     }
 
-    public int getSelectedIndex(){
-        return associationList.getSelectedIndex();
-    }
-
-    public void addAssociation(PartyMemberPanel associated){
-        if(associations.size() < maxAssociations){
-            DefaultListModel newModel = new DefaultListModel();
-            ListModel model = associationList.getModel();
-            for(int index = 0; index < model.getSize(); index++){
-                if(!model.getElementAt(index).equals(" ")) newModel.addElement(model.getElementAt(index));
-            }
-            newModel.addElement(associated.species.getSelectedItem());
-            while(newModel.getSize() < maxAssociations && fillAssociations){
-                newModel.addElement(" ");
-            }
-            associationList.setModel(newModel);
-            associations.add(associated);
+    public final DefaultListModel<PartyMember> generateModel(){
+        DefaultListModel<PartyMember> model = new DefaultListModel<>();
+        ListModel<PartyMember> current = partyList.getModel();
+        for(int index = 0; index < current.getSize(); index++){
+            model.addElement(current.getElementAt(index));
         }
+        return model;
     }
 
-    public void insertAssociation(PartyMemberPanel associated, int index){
-        if(associations.size() < maxAssociations){
-            DefaultListModel newModel = new DefaultListModel();
-            LinkedList<PartyMemberPanel> newAssociations = new LinkedList<>();
-            ListModel model = associationList.getModel();
-            int modelIndex = 0;
-            for(int insertionIndex = 0; insertionIndex <= associations.size(); insertionIndex++){
-                if(!model.getElementAt(index).equals(" ") && insertionIndex != index){
-                    newModel.addElement(model.getElementAt(modelIndex));
-                    newAssociations.add(associations.get(modelIndex));
-                    modelIndex++;
-                }
-                else if(insertionIndex == index){
-                    newModel.addElement(associated.species.getSelectedItem());
-                    newAssociations.add(associated);
-                }
-            }
-            while(newModel.getSize() < maxAssociations && fillAssociations){
-                newModel.addElement(" ");
-            }
-            associationList.setModel(newModel);
-            associations = newAssociations;
+    public final void loadPartyToList(LinkedList<PartyMember> party){
+        DefaultListModel<PartyMember> model = generateModel();
+        model.removeAllElements();
+        membersCount = 0;
+        for(PartyMember member : party){
+            model.addElement(member);
+            membersCount++;
         }
+        while(model.getSize() < MainActivity.PARTY_MAX){
+            model.addElement(new PartyMember(" "));
+        }
+        partyList.setModel(model);
+
+        partyList.setSelectedIndex(0);
     }
 
-    public PartyMemberPanel removeAssociation(int associationIndex){
-        if(associationIndex < associations.size()) {
-            DefaultListModel newModel = new DefaultListModel();
-            ListModel model = associationList.getModel();
-            for (int index = 0; index < model.getSize(); index++) {
-                if (!model.getElementAt(index).equals(" ") && associationIndex != index)
-                    newModel.addElement(model.getElementAt(index));
-            }
-            while (newModel.getSize() < maxAssociations && fillAssociations) {
-                newModel.addElement(" ");
-            }
-            associationList.setModel(newModel);
-            return associations.remove(associationIndex);
-        }
-        return null;
+    public final void addToPartyList(PartyMember member){
+        DefaultListModel<PartyMember> model = generateModel();
+        model.set(membersCount, member);
+        membersCount++;
+        partyList.setModel(model);
     }
 
-    public void updateListAssociations(){
-        DefaultListModel newModel = new DefaultListModel();
-        ListModel model = associationList.getModel();
-        for(int index = 0; index < model.getSize(); index++){
-            if(!model.getElementAt(index).equals(" ")) newModel.addElement(associations.get(index).species.getSelectedItem());
-        }
-        while(newModel.getSize() < maxAssociations && fillAssociations){
-            newModel.addElement(" ");
-        }
-        associationList.setModel(newModel);
+    public final void moveInPartyList(int from, int to){
+        DefaultListModel<PartyMember> model = generateModel();
+        PartyMember member = model.get(from);
+        if(member.species.equals(" ") || from == to) return;
+        if(from >= to) from++;
+        else to++;
+        model.add(to, member);
+        model.removeElementAt(from);
+        partyList.setModel(model);
     }
 
-    public void clearAssociations(){
-        associationList.setModel(new DefaultListModel());
-        associationPanel.removeAll();
-        associations = new LinkedList<>();
+    public final void removeFromPartyList(int index){
+        DefaultListModel<PartyMember> model = generateModel();
+        model.removeElementAt(index);
+        model.addElement(new PartyMember(" "));
+        membersCount--;
+        partyList.setModel(model);
     }
 }

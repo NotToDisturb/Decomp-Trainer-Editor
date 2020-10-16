@@ -18,22 +18,22 @@ public class ImagePanel extends JPanel {
     }
 
     @Override
-    public Dimension getPreferredSize(){
+    public final Dimension getPreferredSize(){
         return new Dimension(width, height);
     }
 
     @Override
-    public Dimension getMinimumSize(){
+    public final Dimension getMinimumSize(){
         return getPreferredSize();
     }
 
     @Override
-    public Dimension getMaximumSize(){
+    public final Dimension getMaximumSize(){
         return getPreferredSize();
     }
 
     @Override
-    public void paintComponent(Graphics graphics){
+    public final void paintComponent(Graphics graphics){
         super.paintComponent(graphics);
         if(!path.equals("")){
             ImageIcon image = new ImageIcon(MainActivity.projectDirectory.getPath() + File.separator + path);

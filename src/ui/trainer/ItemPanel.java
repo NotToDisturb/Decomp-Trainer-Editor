@@ -2,6 +2,7 @@ package ui.trainer;
 
 import main.MainActivity;
 import main.Utils;
+import ui.extensions.AlphanumericUnderscoreFilter;
 import ui.extensions.ComboBoxFiltered;
 
 import javax.swing.*;
@@ -21,16 +22,16 @@ public class ItemPanel extends JPanel {
         cons.gridy++; add(Box.createVerticalStrut(5), cons);
 
         cons.fill = GridBagConstraints.NONE;
-        itemInput = new ComboBoxFiltered(MainActivity.items, MainActivity.items.get(0));
+        itemInput = new ComboBoxFiltered(MainActivity.items, MainActivity.items.get(0), new AlphanumericUnderscoreFilter());
         itemInput.setPrototypeDisplayValue(Utils.getLongestString(MainActivity.items.toArray(new String[0])));
         cons.gridy++; add(itemInput, cons);
     }
 
-    public void setSelectedItem(String item){
+    public final void setSelectedItem(String item){
         itemInput.setSelectedItem(item);
     }
 
-    public String getSelectedItem(){
+    public final String getSelectedItem(){
         return itemInput.getSelectedItem().toString();
     }
 }

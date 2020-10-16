@@ -13,9 +13,9 @@ import javax.swing.*;
 import java.awt.*;
 
 public class MainFrame extends JFrame {
-    public TrainerPanel generalInput;
-    public AiFlagsPanel aiInput;
-    public PartyPanel partyPanel;
+    private TrainerPanel generalInput;
+    private AiFlagsPanel aiInput;
+    private PartyPanel partyPanel;
 
     public MainFrame(){
         setTitle("Decomp Trainer Editor");
@@ -26,7 +26,7 @@ public class MainFrame extends JFrame {
         setVisible(true);
     }
 
-    private void initUIStyle(){
+    private final void initUIStyle(){
         try{
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         }
@@ -38,7 +38,7 @@ public class MainFrame extends JFrame {
         }
     }
 
-    public void populate(){
+    private final void populate(){
         //Content pane of the frame
         JPanel contentPane = new JPanel();
         contentPane.setLayout(new BorderLayout());
@@ -47,7 +47,7 @@ public class MainFrame extends JFrame {
         revalidate();
     }
 
-    public void loadProject(){
+    public final void loadProject(){
         JPanel contentPane = (JPanel) getContentPane();
         MainActivity.trainerIndexes = DataManager.indexTrainers();
         MainActivity.partyIndexes = DataManager.indexParties();
@@ -65,7 +65,7 @@ public class MainFrame extends JFrame {
         setContentPane(contentPane);
     }
 
-    public void createMenu(JPanel panel){
+    private final void createMenu(JPanel panel){
         JMenuBar menu = new JMenuBar();
         JMenu project = new JMenu("Project");
         JMenuItem open = new JMenuItem("Open directory");
@@ -74,7 +74,7 @@ public class MainFrame extends JFrame {
         save.addActionListener(event -> {
             //If there is a loaded trainer, allow saving trainers
             if(MainActivity.currentTrainer != null){
-                MainActivity.mainFrame.saveTrainerData(MainActivity.currentTrainer);
+                saveTrainerData(MainActivity.currentTrainer);
                 for(Trainer trainer : MainActivity.loadedTrainers.values()){
                     DataManager.saveTrainer(trainer);
                 }
@@ -86,15 +86,15 @@ public class MainFrame extends JFrame {
         panel.add(menu, BorderLayout.NORTH);
     }
 
-    public void createEditor(JPanel panel){
+    private final void createEditor(JPanel panel){
         JPanel editor = new JPanel();
         editor.setLayout(new BorderLayout());
-        panel.add(new TrainerListPanel(), BorderLayout.WEST);
+        panel.add(new TrainerListPanel(this), BorderLayout.WEST);
         createEditorTabs(editor);
         panel.add(editor, BorderLayout.CENTER);
     }
 
-    public void createEditorTabs(JPanel pane){
+    private final void createEditorTabs(JPanel pane){
         JPanel editorBorders = new JPanel();
         editorBorders.setLayout(new BorderLayout());
         JTabbedPane tabbedEditor = new JTabbedPane();
@@ -103,7 +103,7 @@ public class MainFrame extends JFrame {
         tabbedEditor.add("General", generalInput);
         aiInput = new AiFlagsPanel();
         tabbedEditor.add("AI", aiInput);
-        partyPanel = new PartyPanel();
+        partyPanel = new PartyPanel(this);
         tabbedEditor.add("Party", partyPanel);
         editorBorders.add(Box.createHorizontalStrut(10), BorderLayout.WEST);
         editorBorders.add(Box.createHorizontalStrut(10), BorderLayout.EAST);
@@ -113,14 +113,14 @@ public class MainFrame extends JFrame {
         pane.add(editorBorders, BorderLayout.CENTER);
     }
 
-    public void loadTrainerData(String name){
+    public final void loadTrainerData(String name){
         Trainer trainer = MainActivity.loadedTrainers.get(name);
         generalInput.loadTrainerGeneralData(trainer);
         aiInput.loadTrainerAiData(trainer);
         partyPanel.loadTrainerPartyData(trainer);
     }
 
-    public void saveTrainerData(String name){
+    public final void saveTrainerData(String name){
         Trainer trainer = MainActivity.loadedTrainers.get(name);
         generalInput.saveTrainerGeneralData(trainer);
         aiInput.saveTrainerAiData(trainer);

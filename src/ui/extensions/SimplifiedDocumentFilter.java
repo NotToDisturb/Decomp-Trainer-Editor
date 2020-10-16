@@ -11,7 +11,7 @@ public class SimplifiedDocumentFilter extends DocumentFilter {
     }
 
     @Override
-    public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
+    public final void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
         Document doc = fb.getDocument();
         StringBuilder sb = new StringBuilder();
         sb.append(doc.getText(0, doc.getLength()));
@@ -20,7 +20,7 @@ public class SimplifiedDocumentFilter extends DocumentFilter {
     }
 
     @Override
-    public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
+    public final void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
 
         Document doc = fb.getDocument();
         StringBuilder sb = new StringBuilder();
@@ -31,7 +31,7 @@ public class SimplifiedDocumentFilter extends DocumentFilter {
     }
 
     @Override
-    public void remove(FilterBypass fb, int offset, int length) throws BadLocationException {
+    public final void remove(FilterBypass fb, int offset, int length) throws BadLocationException {
         Document doc = fb.getDocument();
         StringBuilder sb = new StringBuilder();
         sb.append(doc.getText(0, doc.getLength()));

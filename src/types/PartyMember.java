@@ -16,14 +16,19 @@ public class PartyMember {
     public String heldItem;
     public ArrayList<String> moves;
 
-    public PartyMember(){
+    public PartyMember(String species){
         iv = "0";
         level = "0";
         LinkedList<String> keys = new LinkedList<>(MainActivity.species.keySet());
-        species = keys.get(0);
+        this.species = species;
         heldItem = MainActivity.items.get(0);
         moves = new ArrayList<>();
     }
+
+    public PartyMember(){
+        this((new LinkedList<>(MainActivity.species.keySet())).get(0));
+    }
+
 
     public PartyMember(HashMap<String, String> values){
         iv = values.get("iv");
@@ -33,7 +38,7 @@ public class PartyMember {
         moves = extractMoves(values.get("moves"));
     }
 
-    public static HashMap<String, String> templateValues(){
+    public static final HashMap<String, String> templateValues(){
         HashMap<String, String> template = new HashMap<>();
         for(String field: fields){
             template.put(field, "");
@@ -41,12 +46,12 @@ public class PartyMember {
         return template;
     }
 
-    public static ArrayList<String> extractMoves(String moves){
+    public static final ArrayList<String> extractMoves(String moves){
         if(moves.length() == 0) return new ArrayList<>();
         return new ArrayList<>(Arrays.asList(moves.substring(1, moves.length() - 1).split(",")));
     }
 
-    private String buildMoves(){
+    private final String buildMoves(){
         String moves = "";
         for (int index = 0; index < this.moves.size(); index++) {
             moves += this.moves.get(index);
@@ -55,16 +60,15 @@ public class PartyMember {
         return "{" + moves + "}";
     }
 
-    public boolean hasCustomMoves(){
+    public final boolean hasCustomMoves(){
         boolean hasCustomMoves = false;
-        LinkedList<String> keys = new LinkedList<>(MainActivity.moves.keySet());
         for (int index = 0; index < this.moves.size(); index++) {
             if(!moves.get(index).equals(MainActivity.moves.get(0))) hasCustomMoves = true;
         }
         return hasCustomMoves;
     }
 
-    public String buildMemberStruct(boolean partyHasCustomItems, boolean partyHasCustomMoves){
+    public final String buildMemberStruct(boolean partyHasCustomItems, boolean partyHasCustomMoves){
         String struct = "    {" + System.lineSeparator();
         struct += "    .iv = " + iv + "," + System.lineSeparator();
         struct += "    .lvl = " + level + "," + System.lineSeparator();

@@ -43,13 +43,13 @@ public class GenderPanel extends JPanel {
         });
     }
 
-    public void doSelection(String gender){
+    public final void doSelection(String gender){
         boolean male = gender.equals("");
         maleButton.setSelected(male);
         femaleButton.setSelected(!male);
     }
 
-    public String getGender(){
+    public final String getGender(){
         return maleButton.isSelected() ? "" : "F_TRAINER_FEMALE";
     }
 }

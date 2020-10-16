@@ -31,11 +31,11 @@ public class ItemsPanel extends JPanel {
         cons.gridy++; add(Box.createVerticalStrut(10), cons);
     }
 
-    public void setSelectedItem(int index, String item){
+    public final void setSelectedItem(int index, String item){
         items[index].setSelectedItem(item);
     }
 
-    public ItemPanel[] getSelectedItems(){
+    public final ItemPanel[] getSelectedItems(){
         return items;
     }
 }

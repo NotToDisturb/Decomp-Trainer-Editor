@@ -2,12 +2,13 @@ package ui.list;
 
 import main.MainActivity;
 import main.Utils;
+import ui.MainFrame;
 import utils.DataManager;
 
 import javax.swing.*;
 
 public class TrainerList extends JList<String> {
-    public TrainerList(String[] trainerNames){
+    public TrainerList(MainFrame frame, String[] trainerNames){
         setPrototypeCellValue(Utils.getLongestString(trainerNames));
         setListData(trainerNames);
         setSelectedIndex(0);
@@ -16,11 +17,11 @@ public class TrainerList extends JList<String> {
 
         addListSelectionListener(event -> {
             if(!event.getValueIsAdjusting() && getSelectedIndex() != -1) {
-                MainActivity.mainFrame.saveTrainerData(MainActivity.currentTrainer);
+                frame.saveTrainerData(MainActivity.currentTrainer);
                 MainActivity.currentTrainer = getSelectedValue();
                 if(!MainActivity.loadedTrainers.containsKey(MainActivity.currentTrainer))
                     MainActivity.loadedTrainers.put(MainActivity.currentTrainer, DataManager.loadTrainer(MainActivity.currentTrainer));
-                MainActivity.mainFrame.loadTrainerData(MainActivity.currentTrainer);
+                frame.loadTrainerData(MainActivity.currentTrainer);
                 revalidate();
             }
         });

@@ -3,14 +3,14 @@ package ui.extensions;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-public class ChangeListener implements DocumentListener {
+public class SimplifiedDocumentListener implements DocumentListener {
     @Override
-    public void insertUpdate(DocumentEvent event) {
+    public final void insertUpdate(DocumentEvent event) {
         changedUpdate(event);
     }
 
     @Override
-    public void removeUpdate(DocumentEvent event) {
+    public final void removeUpdate(DocumentEvent event) {
         changedUpdate(event);
     }
 

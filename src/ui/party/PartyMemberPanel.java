@@ -2,24 +2,33 @@ package ui.party;
 
 import main.MainActivity;
 import main.Utils;
+import org.omg.Messaging.SYNC_WITH_TRANSPORT;
+import types.PartyMember;
+import ui.MainFrame;
+import ui.extensions.AlphanumericUnderscoreFilter;
 import ui.extensions.ComboBoxFiltered;
+import ui.extensions.SimplifiedDocumentListener;
 import ui.extensions.TextFieldLimiter;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
 import java.awt.*;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class PartyMemberPanel extends JPanel{
-    public JTextField iv;
-    public JTextField level;
-    public ComboBoxFiltered species;
-    public ComboBoxFiltered heldItem;
-    public ArrayList<ComboBoxFiltered> moves = new ArrayList<>();
+    private final MainFrame frame;
 
-    public PartyMemberPanel(){
+    private JTextField iv;
+    private JTextField level;
+    private ComboBoxFiltered species;
+    private ComboBoxFiltered heldItem;
+    //private ArrayList<ComboBoxFiltered> moves = new ArrayList<>();
+    private MovesPanel movesPanel;
+
+    public PartyMemberPanel(MainFrame frame){
+        this.frame = frame;
+
         setBackground(Color.WHITE);
         setLayout(new FlowLayout(FlowLayout.LEFT));
 
@@ -28,8 +37,7 @@ public class PartyMemberPanel extends JPanel{
         general.setLayout(new GridBagLayout());
         GridBagConstraints cons = new GridBagConstraints();
 
-        cons.gridx = 0;
-        cons.gridy = 0;
+        cons.gridx = 0; cons.gridy = 0;
         cons.fill = GridBagConstraints.BOTH;
         cons.anchor = GridBagConstraints.LINE_START;
         general.add(Box.createVerticalStrut(5), cons);
@@ -58,7 +66,7 @@ public class PartyMemberPanel extends JPanel{
         add(general); add(moves);
     }
 
-    private void createIv(JPanel panel, GridBagConstraints cons){
+    private final void createIv(JPanel panel, GridBagConstraints cons){
         cons.gridy++;
         JLabel ivLabel = new JLabel("IVs: ");
         ivLabel.setHorizontalAlignment(JLabel.LEFT);
@@ -76,7 +84,7 @@ public class PartyMemberPanel extends JPanel{
         panel.add(Box.createVerticalStrut(10), cons);
     }
 
-    private void createLevel(JPanel panel, GridBagConstraints cons){
+    private final void createLevel(JPanel panel, GridBagConstraints cons){
         cons.gridy++;
         JLabel levelLabel = new JLabel("Level: ");
         levelLabel.setHorizontalAlignment(JLabel.LEFT);
@@ -94,7 +102,7 @@ public class PartyMemberPanel extends JPanel{
         panel.add(Box.createVerticalStrut(10), cons);
     }
 
-    private void createSpecies(JPanel panel, GridBagConstraints cons){
+    private final void createSpecies(JPanel panel, GridBagConstraints cons){
         cons.gridy++;
         JLabel speciesLabel = new JLabel("Species: ");
         speciesLabel.setHorizontalAlignment(JLabel.LEFT);
@@ -104,18 +112,13 @@ public class PartyMemberPanel extends JPanel{
         panel.add(Box.createVerticalStrut(5), cons);
 
         LinkedList<String> keys = new LinkedList<>(MainActivity.species.keySet());
-        species = new ComboBoxFiltered(keys, keys.get(0));
-        species.addFocusListener(new FocusListener() {
+        species = new ComboBoxFiltered(keys, keys.get(0), new AlphanumericUnderscoreFilter());
+        JTextField field = (JTextField) species.getEditor().getEditorComponent();
+        field.getDocument().addDocumentListener(new SimplifiedDocumentListener(){
             @Override
-            public void focusGained(FocusEvent e) {}
-
-            @Override
-            public void focusLost(FocusEvent event) {
-                MainActivity.mainFrame.partyPanel.partyMemberListPanel.updateListAssociations();
+            public void changedUpdate(DocumentEvent event){
+                frame.repaint();
             }
-        });
-        species.addActionListener(e -> {
-            MainActivity.mainFrame.partyPanel.partyMemberListPanel.updateListAssociations();
         });
         panel.add(species, cons);
 
@@ -123,7 +126,7 @@ public class PartyMemberPanel extends JPanel{
         panel.add(Box.createVerticalStrut(10), cons);
     }
 
-    private void createHeldItem(JPanel panel, GridBagConstraints cons){
+    private final void createHeldItem(JPanel panel, GridBagConstraints cons){
         cons.gridy++;
         JLabel itemLabel = new JLabel("Held item: ");
         itemLabel.setHorizontalAlignment(JLabel.LEFT);
@@ -132,7 +135,7 @@ public class PartyMemberPanel extends JPanel{
         cons.gridy++;
         panel.add(Box.createVerticalStrut(5), cons);
 
-        heldItem = new ComboBoxFiltered(MainActivity.items, MainActivity.items.get(0));
+        heldItem = new ComboBoxFiltered(MainActivity.items, MainActivity.items.get(0), new AlphanumericUnderscoreFilter());
         heldItem.setPrototypeDisplayValue(Utils.getLongestString(MainActivity.items.toArray(new String[0])));
         panel.add(heldItem, cons);
 
@@ -140,25 +143,44 @@ public class PartyMemberPanel extends JPanel{
         panel.add(Box.createVerticalStrut(10), cons);
     }
 
-    private void createMoves(JPanel panel, GridBagConstraints cons){
-        cons.gridy++;
-        JLabel movesLabel = new JLabel("Moves");
-        movesLabel.setHorizontalAlignment(JLabel.LEFT);
-        panel.add(movesLabel, cons);
+    private final void createMoves(JPanel panel, GridBagConstraints cons){
+        movesPanel = new MovesPanel();
+        cons.gridy++; panel.add(movesPanel, cons);
+    }
 
-        for(int index = 0; index < 4; index++){
-            cons.gridy++;
-            panel.add(Box.createVerticalStrut(10), cons);
+    public final String getSpecies(){
+        return ((JTextField) species.getEditor().getEditorComponent()).getText();
+    }
 
-            cons.gridy++;
-            LinkedList<String> values = new LinkedList<>(MainActivity.moves.values());
-            ComboBoxFiltered move = new ComboBoxFiltered(values, values.get(0));
-            move.setPrototypeDisplayValue(Utils.getLongestString(values.toArray(new String[0])));
-            panel.add(move, cons);
-            moves.add(move);
+    public final void loadPartyMemberData(PartyMember member){
+        iv.setText(member.iv);
+        level.setText(member.level);
+        species.setSelectedItem(member.species);
+        heldItem.setSelectedItem(!member.heldItem.equals("") ? member.heldItem : MainActivity.items.get(0));
+        if(member.moves.size() == 0){
+            for(int moveIndex = 0; moveIndex < MainActivity.MOVES_MAX; moveIndex++){
+                movesPanel.setMove(moveIndex, MainActivity.moves.values().toArray(new String[0])[0]);
+            }
         }
+        else{
+            for(int moveIndex = 0; moveIndex < member.moves.size(); moveIndex++){
+                movesPanel.setMove(moveIndex, MainActivity.moves.get(member.moves.get(moveIndex)));
+            }
+        }
+    }
 
-        cons.gridy++;
-        panel.add(Box.createVerticalStrut(10), cons);
+    public final void savePartyMemberData(PartyMember member){
+        member.iv = iv.getText();
+        member.level = level.getText();
+        member.species = this.species.getSelectedItem().toString();
+        member.heldItem = heldItem.getSelectedItem().toString();
+        LinkedList<String> keys = new LinkedList<>(MainActivity.moves.keySet());
+        LinkedList<String> values = new LinkedList<>(MainActivity.moves.values());
+        ArrayList<String> moves = new ArrayList<>();
+        for(int moveIndex = 0; moveIndex < MainActivity.MOVES_MAX; moveIndex++){
+            int indexOfMove = values.indexOf(movesPanel.getMove(moveIndex));
+            moves.add(keys.get(indexOfMove));
+        }
+        member.moves = moves;
     }
 }

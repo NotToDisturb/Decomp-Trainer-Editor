@@ -4,6 +4,7 @@ import main.Utils;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
+import javax.swing.text.DocumentFilter;
 import javax.swing.text.PlainDocument;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -14,7 +15,7 @@ public class ComboBoxFiltered extends JComboBox<String>{
     private String showAll;
     private boolean shouldApplyEvent = true;
 
-    public ComboBoxFiltered(LinkedList<String> elements, String showAll){
+    public ComboBoxFiltered(LinkedList<String> elements, String showAll, DocumentFilter filter){
         super(elements.toArray(new String[0]));
         setSelectedIndex(0);
         setPrototypeDisplayValue(Utils.getLongestString(elements.toArray(new String[0])));
@@ -22,15 +23,16 @@ public class ComboBoxFiltered extends JComboBox<String>{
         this.showAll = showAll.toLowerCase();
         setEditable(true);
         configFocus();
-        configFilter();
+        configDocumentFilter(filter);
+        configAutofilter();
         configPressEnter();
     }
 
-    public ComboBoxFiltered(LinkedList<String> elements){
-        this(elements, "");
+    public ComboBoxFiltered(LinkedList<String> elements, DocumentFilter filter){
+        this(elements, "", filter);
     }
 
-    public void setTypingModel(ComboBoxModel<String> model) {
+    private final void setTypingModel(ComboBoxModel<String> model) {
         if(editor == null){
             super.setModel(model);
             return;
@@ -44,7 +46,7 @@ public class ComboBoxFiltered extends JComboBox<String>{
         shouldApplyEvent = true;
     }
 
-    private void configFocus(){
+    private final void configFocus(){
         JTextField field = (JTextField) getEditor().getEditorComponent();
         field.addFocusListener(new FocusListener() {
             @Override
@@ -60,10 +62,14 @@ public class ComboBoxFiltered extends JComboBox<String>{
         });
     }
 
-    private void configFilter(){
+    private final void configDocumentFilter(DocumentFilter filter){
         JTextField field = (JTextField) getEditor().getEditorComponent();
-        ((PlainDocument) field.getDocument()).setDocumentFilter(new AlphanumericUnderscoreFilter());
-        field.getDocument().addDocumentListener(new ChangeListener(){
+        ((PlainDocument) field.getDocument()).setDocumentFilter(filter);
+    }
+
+    private final void configAutofilter(){
+        JTextField field = (JTextField) getEditor().getEditorComponent();
+        field.getDocument().addDocumentListener(new SimplifiedDocumentListener(){
             @Override
             public void changedUpdate(DocumentEvent event){
                 if(!shouldApplyEvent) return;
@@ -76,12 +82,12 @@ public class ComboBoxFiltered extends JComboBox<String>{
         });
     }
 
-    public void configPressEnter(){
+    private final void configPressEnter(){
         JTextField field = (JTextField) getEditor().getEditorComponent();
         field.addActionListener(event -> autocomplete(field));
     }
 
-    public void autocomplete(JTextField field){
+    private final void autocomplete(JTextField field){
         String text = field.getText();
         String[] filtered = getFilteredElements(text);
         if(filtered.length == 0) filtered = elements.toArray(new String[0]);
@@ -89,7 +95,7 @@ public class ComboBoxFiltered extends JComboBox<String>{
         setSelectedItem(filtered[0]);
     }
 
-    private String[] getFilteredElements(String text){
+    private final String[] getFilteredElements(String text){
         //Base case
         if(text.equalsIgnoreCase(showAll)) return this.elements.toArray(new String[0]);
 

@@ -1,67 +1,71 @@
 package ui.party;
 
-import main.MainActivity;
 import types.PartyMember;
 import types.Trainer;
+import ui.MainFrame;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.LinkedList;
 
 public class PartyPanel extends JPanel {
-    public PartyMemberListPanel partyMemberListPanel;
+    private final MainFrame frame;
+    private final PartyMemberListPanel partyMemberListPanel;
+    private final PartyMemberPanel memberPanel;
 
-    public PartyPanel(){
+    private PartyMember currentLoaded;
+
+    public PartyPanel(MainFrame frame){
+        this.frame = frame;
+
         setBackground(Color.WHITE);
         setLayout(new FlowLayout(FlowLayout.LEFT));
         add(Box.createHorizontalStrut(10));
         JPanel spacer = new JPanel();
         spacer.setLayout(new BoxLayout(spacer, BoxLayout.PAGE_AXIS));
         spacer.setAlignmentX(Component.LEFT_ALIGNMENT);
-        partyMemberListPanel = new PartyMemberListPanel(6, true);
+        partyMemberListPanel = new PartyMemberListPanel(frame, this);
         spacer.add(partyMemberListPanel);
         add(spacer);
+        memberPanel = new PartyMemberPanel(frame);
+        add(memberPanel);
     }
 
-    public void loadTrainerPartyData(Trainer trainer){
-        partyMemberListPanel.clearAssociations();
-        for(int memberIndex = 0; memberIndex < trainer.party.size(); memberIndex++){
-            loadPartyMemberData(trainer.party.get(memberIndex));
-        }
-        partyMemberListPanel.setSelectedIndex(0);
+    public final PartyMember getCurrentLoaded() {
+        return currentLoaded;
     }
 
-    public void loadPartyMemberData(PartyMember member){
-        PartyMemberPanel memberInputs = new PartyMemberPanel();
-        memberInputs.iv.setText(member.iv);
-        memberInputs.level.setText(member.level);
-        memberInputs.species.setSelectedItem(member.species);
-        if(!member.heldItem.equals("")) memberInputs.heldItem.setSelectedItem(member.heldItem);
-        for(int moveIndex = 0; moveIndex < member.moves.size(); moveIndex++){
-            memberInputs.moves.get(moveIndex).setSelectedItem(MainActivity.moves.get(member.moves.get(moveIndex)));
-        }
-        partyMemberListPanel.addAssociation(memberInputs);
+    public final String getSpeciesText(){
+        return memberPanel.getSpecies();
     }
 
-    public void saveTrainerPartyData(Trainer trainer){
+    public final void loadTrainerPartyData(Trainer trainer){
+        loadPartyMemberData(trainer.party.get(0));
+        partyMemberListPanel.loadPartyToList(trainer.party);
+    }
+
+    public final void loadPartyMemberData(PartyMember member){
+        currentLoaded = member;
+        memberPanel.loadPartyMemberData(member);
+    }
+
+    public final void saveTrainerPartyData(Trainer trainer){
+        savePartyMemberData(currentLoaded);
+
         LinkedList<PartyMember> party = new LinkedList<>();
-        for(int index = 0; index < partyMemberListPanel.associations.size(); index++){
-            PartyMemberPanel memberInputs = partyMemberListPanel.associations.get(index);
-            PartyMember member = new PartyMember();
-            member.iv = memberInputs.iv.getText();
-            member.level = memberInputs.level.getText();
-            String species = memberInputs.species.getSelectedItem().toString();
-            member.species = species;
-            member.heldItem = memberInputs.heldItem.getSelectedItem().toString();
-            LinkedList<String> keys = new LinkedList<>(MainActivity.moves.keySet());
-            LinkedList<String> values = new LinkedList<>(MainActivity.moves.values());
-            for(int subindex = 0; subindex < memberInputs.moves.size(); subindex++){
-                String move = memberInputs.moves.get(subindex).getSelectedItem().toString();
-                int indexOfMove = values.indexOf(move);
-                member.moves.add(keys.get(indexOfMove));
-            }
-            party.add(member);
+        DefaultListModel<PartyMember> model = partyMemberListPanel.generateModel();
+        for(int memberIndex = 0; memberIndex < partyMemberListPanel.getMembersCount(); memberIndex++){
+            party.add(model.get(memberIndex));
         }
         trainer.party = party;
+    }
+    
+    public final void savePartyMemberData(PartyMember member){
+        memberPanel.savePartyMemberData(member);
+    }
+
+    public final void switchPartyMemberData(PartyMember newMember){
+        savePartyMemberData(currentLoaded);
+        loadPartyMemberData(newMember);
     }
 }

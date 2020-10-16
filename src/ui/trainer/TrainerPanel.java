@@ -3,8 +3,8 @@ package ui.trainer;
 import main.MainActivity;
 import main.Utils;
 import types.Trainer;
+import ui.extensions.SpeciesFilter;
 import ui.extensions.ComboBoxFiltered;
-import ui.extensions.ImagePanel;
 import ui.extensions.TextFieldLimiter;
 
 import javax.swing.*;
@@ -13,13 +13,13 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class TrainerPanel extends JPanel {
-    public JTextField nameInput;
-    public ComboBoxFiltered classInput;
-    public JCheckBox doubleBattleCheck;
-    public ItemsPanel itemsPanel;
-    public GenderPanel genderPanel;
-    public ComboBoxFiltered musicInput;
-    public TrainerPicPanel picPanel;
+    private JTextField nameInput;
+    private ComboBoxFiltered classInput;
+    private JCheckBox doubleBattleCheck;
+    private ItemsPanel itemsPanel;
+    private GenderPanel genderPanel;
+    private ComboBoxFiltered musicInput;
+    private TrainerPicPanel picPanel;
 
     public TrainerPanel(){
         setBackground(Color.WHITE);
@@ -30,7 +30,7 @@ public class TrainerPanel extends JPanel {
         createGeneralRightColumn();
     }
 
-    public void createGeneralLeftColumn(){
+    private final void createGeneralLeftColumn(){
         JPanel column = new JPanel();
         column.setBackground(Color.WHITE);
         column.setLayout(new GridBagLayout());
@@ -46,7 +46,7 @@ public class TrainerPanel extends JPanel {
         add(column);
     }
 
-    public void createGeneralRightColumn(){
+    private final void createGeneralRightColumn(){
         JPanel column = new JPanel();
         column.setBackground(Color.WHITE);
         column.setLayout(new GridBagLayout());
@@ -61,7 +61,7 @@ public class TrainerPanel extends JPanel {
         add(column);
     }
 
-    public void createNameInput(JPanel pane, GridBagConstraints cons){
+    private final void createNameInput(JPanel pane, GridBagConstraints cons){
         pane.add(Box.createVerticalStrut(30), cons);
         cons.gridy++;
         JLabel nameLabel = new JLabel("Name: ");
@@ -73,12 +73,12 @@ public class TrainerPanel extends JPanel {
 
         cons.gridy++;
         cons.fill = GridBagConstraints.NONE;
-        nameInput = new JTextField(11);
-        nameInput.setDocument(new TextFieldLimiter(11, -1));
+        nameInput = new JTextField(MainActivity.NAME_MAX);
+        nameInput.setDocument(new TextFieldLimiter(MainActivity.NAME_MAX, -1));
         pane.add(nameInput, cons);
     }
 
-    public void createTrainerClassInput(JPanel pane, GridBagConstraints cons){
+    private final void createTrainerClassInput(JPanel pane, GridBagConstraints cons){
         cons.gridy++;
         cons.fill = GridBagConstraints.BOTH;
         pane.add(Box.createVerticalStrut(30), cons);
@@ -92,12 +92,12 @@ public class TrainerPanel extends JPanel {
 
         cons.gridy++;
         LinkedList<String> values = new LinkedList<>(MainActivity.trainerClasses.keySet());
-        classInput = new ComboBoxFiltered(values);
+        classInput = new ComboBoxFiltered(values, new SpeciesFilter());
         classInput.setPrototypeDisplayValue(Utils.getLongestString(MainActivity.trainerClasses.keySet().toArray(new String[0])));
         pane.add(classInput, cons);
     }
 
-    public void createDoubleBattleInput(JPanel pane, GridBagConstraints cons){
+    private final void createDoubleBattleInput(JPanel pane, GridBagConstraints cons){
         cons.gridy++;
         pane.add(Box.createVerticalStrut(30), cons);
         cons.gridy++;
@@ -112,22 +112,22 @@ public class TrainerPanel extends JPanel {
         pane.add(doubleBattlePanel, cons);
     }
 
-    public void createItemsInput(JPanel pane, GridBagConstraints cons){
+    private final void createItemsInput(JPanel pane, GridBagConstraints cons){
         itemsPanel = new ItemsPanel();
         cons.gridy++; pane.add(itemsPanel, cons);
     }
 
-    public void createTrainerPicInput(JPanel pane, GridBagConstraints cons){
+    private final void createTrainerPicInput(JPanel pane, GridBagConstraints cons){
         picPanel = new TrainerPicPanel();
         cons.gridy++; pane.add(picPanel, cons);
     }
 
-    public void createGenderInput(JPanel pane, GridBagConstraints cons){
+    private final void createGenderInput(JPanel pane, GridBagConstraints cons){
         genderPanel = new GenderPanel();
         cons.gridy++; pane.add(genderPanel, cons);
     }
 
-    public void createMusicInput(JPanel pane, GridBagConstraints cons){
+    private final void createMusicInput(JPanel pane, GridBagConstraints cons){
         cons.gridy++;
         pane.add(Box.createVerticalStrut(30), cons);
         cons.gridy++;
@@ -139,14 +139,14 @@ public class TrainerPanel extends JPanel {
         pane.add(Box.createVerticalStrut(5), cons);
 
         cons.gridy++;
-        musicInput = new ComboBoxFiltered(MainActivity.music);
+        musicInput = new ComboBoxFiltered(MainActivity.music, new SpeciesFilter());
         musicInput.setPrototypeDisplayValue(Utils.getLongestString(MainActivity.music.toArray(new String[0])));
         pane.add(musicInput, cons);
         cons.gridy++;
         pane.add(Box.createVerticalStrut(30), cons);
     }
 
-    public void loadTrainerGeneralData(Trainer trainer){
+    public final void loadTrainerGeneralData(Trainer trainer){
         nameInput.setText(trainer.trainerName);
         classInput.setSelectedItem(trainer.trainerClass);
         doubleBattleCheck.setSelected(trainer.doubleBattle);
@@ -160,7 +160,7 @@ public class TrainerPanel extends JPanel {
         }
     }
 
-    public void saveTrainerGeneralData(Trainer trainer){
+    public final void saveTrainerGeneralData(Trainer trainer){
         trainer.trainerName = nameInput.getText();
         trainer.trainerClass = classInput.getSelectedItem().toString();
         trainer.doubleBattle = doubleBattleCheck.isSelected();

@@ -17,7 +17,7 @@ public class TextFieldLimiter extends PlainDocument {
     }
 
     @Override
-    public void insertString(int offset, String str, AttributeSet attr){
+    public final void insertString(int offset, String str, AttributeSet attr){
         if (str == null)
             return;
 

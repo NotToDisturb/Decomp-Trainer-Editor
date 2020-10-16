@@ -35,7 +35,7 @@ public class Trainer {
         party = DataManager.loadParty(partyName);
     }
 
-    public static HashMap<String, String> templateValues(){
+    public static final HashMap<String, String> templateValues(){
         HashMap<String, String> template = new HashMap<>();
         for(String field: fields){
             template.put(field, "");
@@ -43,37 +43,37 @@ public class Trainer {
         return template;
     }
 
-    private String extractTrainerName(String name){
+    private final String extractTrainerName(String name){
         return name.replace("\"", "").replace("_(", "").replace(")", "");
     }
 
-    private String buildTrainerName(){
+    private final String buildTrainerName(){
         return "_(\"" + trainerName + "\")";
     }
 
-    private String extractMusic(String music){
+    private final String extractMusic(String music){
         if(music.contains("|")) return music.split("\\|")[1];
         else return music;
     }
 
-    private String extractGender(String music){
+    private final String extractGender(String music){
         if(music.contains("|")) return music.split("\\|")[0];
         else return "";
     }
 
-    private String buildMusicGender(){
+    private final String buildMusicGender(){
         String musicGender = "";
         if(!gender.equals("")) musicGender += gender + " | ";
         return musicGender + music;
     }
 
-    private ArrayList<String> extractItems(String items){
+    private final ArrayList<String> extractItems(String items){
         if(items.equals("{}")) return new ArrayList<>();
         items = items.replace("{", "").replace("}", "").replaceAll(" ", "");
         return new ArrayList<>(Arrays.asList(items.split(",")));
     }
 
-    private String buildTrainerItems(){
+    private final String buildTrainerItems(){
         String items = "";
         boolean areAllItemsNone = true;
         for (int index = 0; index < this.items.size(); index++) {
@@ -88,15 +88,15 @@ public class Trainer {
         return "{" + items + "}";
     }
 
-    private String buildDoubleBattle(){
+    private final String buildDoubleBattle(){
         if(doubleBattle) return "TRUE";
         else return "FALSE";
     }
 
-    private ArrayList<String> extractAiFlags(String flags){
+    private final ArrayList<String> extractAiFlags(String flags){
         return new ArrayList<>(Arrays.asList(flags.split("\\|")));
     }
-    private String buildAiFlags(){
+    private final String buildAiFlags(){
         String flags = "";
         for(int index = 0; index < aiFlags.size(); index++){
             flags += aiFlags.get(index);
@@ -108,15 +108,15 @@ public class Trainer {
         return flags;
     }
 
-    private String extractPartyName(String name){
+    private final String extractPartyName(String name){
         return name.split("=")[1].replace("}", "");
     }
 
-    private String buildPartyName(){
+    private final String buildPartyName(){
         return "{." + getPartyType().substring("TrainerMon".length()) + " = " + partyName + "}";
     }
 
-    public String getPartyType(){
+    public final String getPartyType(){
         String partyType = "TrainerMon";
         if(!partyHasCustomItems()) partyType += "No";
         partyType += "Item";
@@ -126,7 +126,7 @@ public class Trainer {
         return partyType;
     }
 
-    public String getPartyFlags(){
+    public final String getPartyFlags(){
         String partyType = "0";
         if(partyHasCustomItems()) partyType = "F_TRAINER_PARTY_HELD_ITEM";
         if(partyHasCustomMoves()){
@@ -137,7 +137,7 @@ public class Trainer {
         return partyType;
     }
 
-    public boolean partyHasCustomMoves(){
+    public final boolean partyHasCustomMoves(){
         boolean hasCustomMoves = false;
         for(PartyMember member : party){
             if(member.hasCustomMoves()){
@@ -148,7 +148,7 @@ public class Trainer {
         return hasCustomMoves;
     }
 
-    public boolean partyHasCustomItems(){
+    public final boolean partyHasCustomItems(){
         boolean hasCustomItems = false;
         for(PartyMember member : party){
             if(member.heldItem != MainActivity.items.get(0)){
@@ -159,7 +159,7 @@ public class Trainer {
         return hasCustomItems;
     }
 
-    public String buildTrainerStruct(){
+    public final String buildTrainerStruct(){
         String struct = "    [" + key + "] =" + System.lineSeparator();
         struct += "    {" + System.lineSeparator();
         struct += "        .partyFlags = " + getPartyFlags() + "," + System.lineSeparator();
@@ -176,7 +176,7 @@ public class Trainer {
         return struct;
     }
 
-    public String buildPartyStruct(){
+    public final String buildPartyStruct(){
         String struct = "static const struct " + getPartyType() + " " + partyName + "[] = {" + System.lineSeparator();
         for(int index = 0; index < party.size(); index++){
             struct += party.get(index).buildMemberStruct(partyHasCustomItems(), partyHasCustomMoves());

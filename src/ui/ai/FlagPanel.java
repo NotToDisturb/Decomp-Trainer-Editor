@@ -17,11 +17,11 @@ public class FlagPanel extends JPanel {
         add(flagCheck); add(aiLabel);
     }
 
-    public void setSelected(boolean selected){
+    public final void setSelected(boolean selected){
         flagCheck.setSelected(selected);
     }
 
-    public boolean isSelected(){
+    public final boolean isSelected(){
         return flagCheck.isSelected();
     }
 }

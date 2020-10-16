@@ -2,6 +2,7 @@ package ui.trainer;
 
 import main.MainActivity;
 import main.Utils;
+import ui.extensions.SpeciesFilter;
 import ui.extensions.ComboBoxFiltered;
 import ui.extensions.ImagePanel;
 
@@ -35,7 +36,7 @@ public class TrainerPicPanel extends JPanel {
         cons.gridy++; add(Box.createVerticalStrut(10), cons);
 
         
-        picCombo = new ComboBoxFiltered(MainActivity.picList);
+        picCombo = new ComboBoxFiltered(MainActivity.picList, new SpeciesFilter());
         picCombo.setPrototypeDisplayValue(Utils.getLongestString(MainActivity.picList.toArray(new String[0])));
         cons.gridy++; add(picCombo, cons);
 
@@ -49,15 +50,15 @@ public class TrainerPicPanel extends JPanel {
         });
     }
     
-    public void setImage(String path){
+    public final void setImage(String path){
         picPanel.setImage(path);
     }
     
-    public void setSelectedPic(String pic){
+    public final void setSelectedPic(String pic){
         picCombo.setSelectedItem(pic);
     }
 
-    public String getSelectedPic(){
+    public final String getSelectedPic(){
         return picCombo.getSelectedItem().toString();
     }
 }
