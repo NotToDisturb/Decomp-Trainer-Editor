@@ -16,11 +16,11 @@ public class TrainerList extends JList<String> {
 
         addListSelectionListener(event -> {
             if(!event.getValueIsAdjusting() && getSelectedIndex() != -1) {
-                MainActivity.screen.saveTrainerData(MainActivity.currentTrainer);
+                MainActivity.mainFrame.saveTrainerData(MainActivity.currentTrainer);
                 MainActivity.currentTrainer = getSelectedValue();
                 if(!MainActivity.loadedTrainers.containsKey(MainActivity.currentTrainer))
                     MainActivity.loadedTrainers.put(MainActivity.currentTrainer, DataManager.loadTrainer(MainActivity.currentTrainer));
-                MainActivity.screen.loadTrainerData(MainActivity.currentTrainer);
+                MainActivity.mainFrame.loadTrainerData(MainActivity.currentTrainer);
                 revalidate();
             }
         });

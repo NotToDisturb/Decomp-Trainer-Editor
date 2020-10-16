@@ -4,6 +4,7 @@ import main.MainActivity;
 import types.Trainer;
 import ui.ai.AiFlagsPanel;
 import ui.list.TrainerListPanel;
+import ui.party.PartyPanel;
 import ui.trainer.TrainerPanel;
 import utils.DataManager;
 import utils.DirectoryChooser;
@@ -14,7 +15,7 @@ import java.awt.*;
 public class MainFrame extends JFrame {
     public TrainerPanel generalInput;
     public AiFlagsPanel aiInput;
-    public PartyInput partyInput;
+    public PartyPanel partyPanel;
 
     public MainFrame(){
         setTitle("Decomp Trainer Editor");
@@ -73,7 +74,7 @@ public class MainFrame extends JFrame {
         save.addActionListener(event -> {
             //If there is a loaded trainer, allow saving trainers
             if(MainActivity.currentTrainer != null){
-                MainActivity.screen.saveTrainerData(MainActivity.currentTrainer);
+                MainActivity.mainFrame.saveTrainerData(MainActivity.currentTrainer);
                 for(Trainer trainer : MainActivity.loadedTrainers.values()){
                     DataManager.saveTrainer(trainer);
                 }
@@ -102,8 +103,8 @@ public class MainFrame extends JFrame {
         tabbedEditor.add("General", generalInput);
         aiInput = new AiFlagsPanel();
         tabbedEditor.add("AI", aiInput);
-        partyInput = new PartyInput();
-        tabbedEditor.add("Party", partyInput);
+        partyPanel = new PartyPanel();
+        tabbedEditor.add("Party", partyPanel);
         editorBorders.add(Box.createHorizontalStrut(10), BorderLayout.WEST);
         editorBorders.add(Box.createHorizontalStrut(10), BorderLayout.EAST);
         editorBorders.add(Box.createVerticalStrut(5), BorderLayout.NORTH);
@@ -116,14 +117,14 @@ public class MainFrame extends JFrame {
         Trainer trainer = MainActivity.loadedTrainers.get(name);
         generalInput.loadTrainerGeneralData(trainer);
         aiInput.loadTrainerAiData(trainer);
-        partyInput.loadTrainerPartyData(trainer);
+        partyPanel.loadTrainerPartyData(trainer);
     }
 
     public void saveTrainerData(String name){
         Trainer trainer = MainActivity.loadedTrainers.get(name);
         generalInput.saveTrainerGeneralData(trainer);
         aiInput.saveTrainerAiData(trainer);
-        partyInput.saveTrainerPartyData(trainer);
+        partyPanel.saveTrainerPartyData(trainer);
         MainActivity.loadedTrainers.put(name, trainer);
     }
 }

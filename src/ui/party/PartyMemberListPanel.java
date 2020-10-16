@@ -1,22 +1,22 @@
-package ui.extensions;
+package ui.party;
 
 import main.MainActivity;
 import main.Utils;
 import types.PartyMember;
-import ui.PartyMemberInput;
+import ui.extensions.SpeciesRenderer;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.LinkedList;
 
-public class PartyMemberSelector extends JPanel {
+public class PartyMemberListPanel extends JPanel {
     private int maxAssociations;
     private boolean fillAssociations;
     private JList associationList;
     private JPanel associationPanel;
-    public LinkedList<PartyMemberInput> associations = new LinkedList<>();
+    public LinkedList<PartyMemberPanel> associations = new LinkedList<>();
 
-    public PartyMemberSelector(int maxAssociations, boolean fillAssociations){
+    public PartyMemberListPanel(int maxAssociations, boolean fillAssociations){
         this.maxAssociations = maxAssociations;
         this.fillAssociations = fillAssociations;
         setBackground(Color.WHITE);
@@ -56,7 +56,7 @@ public class PartyMemberSelector extends JPanel {
                 if(!associationList.getSelectedValue().toString().equals(" ")) {
                     associationPanel.removeAll();
                     associationPanel.add(associations.get(getSelectedIndex()));
-                    MainActivity.screen.repaint();
+                    MainActivity.mainFrame.repaint();
                 }
             }
         });
@@ -70,7 +70,7 @@ public class PartyMemberSelector extends JPanel {
         JButton add = new JButton("Add");
         add.addActionListener(event ->{
             associationPanel.removeAll();
-            MainActivity.screen.partyInput.loadPartyData(new PartyMember());
+            MainActivity.mainFrame.partyPanel.loadPartyMemberData(new PartyMember());
             setSelectedIndex(associations.size() - 1);
         });
         pane.add(add, cons);
@@ -148,7 +148,7 @@ public class PartyMemberSelector extends JPanel {
         return associationList.getSelectedIndex();
     }
 
-    public void addAssociation(PartyMemberInput associated){
+    public void addAssociation(PartyMemberPanel associated){
         if(associations.size() < maxAssociations){
             DefaultListModel newModel = new DefaultListModel();
             ListModel model = associationList.getModel();
@@ -164,10 +164,10 @@ public class PartyMemberSelector extends JPanel {
         }
     }
 
-    public void insertAssociation(PartyMemberInput associated, int index){
+    public void insertAssociation(PartyMemberPanel associated, int index){
         if(associations.size() < maxAssociations){
             DefaultListModel newModel = new DefaultListModel();
-            LinkedList<PartyMemberInput> newAssociations = new LinkedList<>();
+            LinkedList<PartyMemberPanel> newAssociations = new LinkedList<>();
             ListModel model = associationList.getModel();
             int modelIndex = 0;
             for(int insertionIndex = 0; insertionIndex <= associations.size(); insertionIndex++){
@@ -189,7 +189,7 @@ public class PartyMemberSelector extends JPanel {
         }
     }
 
-    public PartyMemberInput removeAssociation(int associationIndex){
+    public PartyMemberPanel removeAssociation(int associationIndex){
         if(associationIndex < associations.size()) {
             DefaultListModel newModel = new DefaultListModel();
             ListModel model = associationList.getModel();

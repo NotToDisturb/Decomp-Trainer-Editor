@@ -11,10 +11,10 @@ public class DirectoryChooser {
         chooser.setCurrentDirectory(new File("."));
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         chooser.setAcceptAllFileFilterUsed(false);
-        if(chooser.showOpenDialog(MainActivity.screen) == JFileChooser.APPROVE_OPTION){
+        if(chooser.showOpenDialog(MainActivity.mainFrame) == JFileChooser.APPROVE_OPTION){
             MainActivity.projectDirectory = chooser.getSelectedFile();
-            MainActivity.screen.getContentPane().removeAll();
-            MainActivity.screen.loadProject();
+            MainActivity.mainFrame.getContentPane().removeAll();
+            MainActivity.mainFrame.loadProject();
         }
     }
 }

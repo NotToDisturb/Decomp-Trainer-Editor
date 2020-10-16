@@ -1,22 +1,21 @@
 package ui.list;
 
 import main.MainActivity;
-import ui.extensions.SimplifiedDocumentFilter;
+import ui.extensions.AlphanumericUnderscoreFilter;
+import ui.extensions.ChangeListener;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
 import javax.swing.text.PlainDocument;
 import java.util.ArrayList;
 
 public class TrainerListSearchBar extends JTextField {
     public TrainerListSearchBar(TrainerList list){
-        ((PlainDocument) getDocument()).setDocumentFilter(new SimplifiedDocumentFilter(){
+        ((PlainDocument) getDocument()).setDocumentFilter(new AlphanumericUnderscoreFilter());
+        getDocument().addDocumentListener(new ChangeListener(){
             @Override
-            protected boolean test(String text) {
-                // If text contains anything other than letters or underscores
-                if(!text.matches("[a-zA-Z0-9_]*")) return false;
-
-                list.setModel(new DefaultComboBoxModel(getFilteredTrainers(text)));
-                return true;
+            public void changedUpdate(DocumentEvent event){
+                SwingUtilities.invokeLater(() -> list.setModel(new DefaultComboBoxModel(getFilteredTrainers(getText()))));
             }
         });
     }

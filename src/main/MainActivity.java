@@ -4,13 +4,14 @@ import types.Trainer;
 import types.TrainerClass;
 import ui.MainFrame;
 
+import javax.swing.*;
 import java.io.File;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
 public class MainActivity {
-    public static MainFrame screen;
+    public static MainFrame mainFrame;
     public static File projectDirectory = null;
 
     public static final int ITEMS_MAX = 4;
@@ -25,6 +26,6 @@ public class MainActivity {
     public static HashMap<String, Trainer> loadedTrainers = new LinkedHashMap<>();
 
     public static void main(String[] args){
-        screen = new MainFrame();
+        SwingUtilities.invokeLater(() ->  mainFrame = new MainFrame());
     }
 }
