@@ -3,7 +3,7 @@ package me.disturbo.ui.trainer;
 import me.disturbo.main.MainActivity;
 import me.disturbo.main.Utils;
 import me.disturbo.types.Trainer;
-import me.disturbo.ui.party.MovesFilter;
+import me.disturbo.ui.extensions.AlphanumericUnderscoreFilter;
 import me.disturbo.ui.extensions.ComboBoxFiltered;
 import me.disturbo.ui.extensions.TextFieldLimiter;
 
@@ -96,7 +96,7 @@ public class TrainerPanel extends JPanel {
 
         cons.gridy++;
         LinkedList<String> values = new LinkedList<>(MainActivity.trainerClasses.keySet());
-        classInput = new ComboBoxFiltered(values, new MovesFilter());
+        classInput = new ComboBoxFiltered(values, new AlphanumericUnderscoreFilter());
         classInput.setPrototypeDisplayValue(Utils.getLongestString(MainActivity.trainerClasses.keySet().toArray(new String[0])));
         pane.add(classInput, cons);
     }
@@ -143,7 +143,7 @@ public class TrainerPanel extends JPanel {
         pane.add(Box.createVerticalStrut(5), cons);
 
         cons.gridy++;
-        musicInput = new ComboBoxFiltered(MainActivity.music, new MovesFilter());
+        musicInput = new ComboBoxFiltered(MainActivity.music, new AlphanumericUnderscoreFilter());
         musicInput.setPrototypeDisplayValue(Utils.getLongestString(MainActivity.music.toArray(new String[0])));
         pane.add(musicInput, cons);
         cons.gridy++;

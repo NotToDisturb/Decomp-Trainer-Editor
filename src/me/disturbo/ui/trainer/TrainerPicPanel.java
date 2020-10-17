@@ -2,6 +2,7 @@ package me.disturbo.ui.trainer;
 
 import me.disturbo.main.MainActivity;
 import me.disturbo.main.Utils;
+import me.disturbo.ui.extensions.AlphanumericUnderscoreFilter;
 import me.disturbo.ui.party.MovesFilter;
 import me.disturbo.ui.extensions.ComboBoxFiltered;
 import me.disturbo.ui.extensions.ImagePanel;
@@ -41,7 +42,7 @@ public class TrainerPicPanel extends JPanel {
         cons.gridy++; add(Box.createVerticalStrut(10), cons);
 
         
-        picBox = new ComboBoxFiltered(MainActivity.picList, new MovesFilter());
+        picBox = new ComboBoxFiltered(MainActivity.picList, new AlphanumericUnderscoreFilter());
         picBox.setPrototypeDisplayValue(Utils.getLongestString(MainActivity.picList.toArray(new String[0])));
         cons.gridy++; add(picBox, cons);
 

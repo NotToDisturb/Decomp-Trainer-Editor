@@ -29,6 +29,7 @@ public class MovePanel extends JPanel {
         LinkedList<String> values = new LinkedList<>(MainActivity.moves.values());
         moveBox = new ComboBoxFiltered(values, values.get(0), new MovesFilter());
         moveBox.setPrototypeDisplayValue(Utils.getLongestString(values.toArray(new String[0])));
+        cons.gridy++; add(moveBox, cons);
     }
 
     public final void setSelectedItem(String item){
