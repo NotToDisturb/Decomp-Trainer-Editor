@@ -1,7 +1,7 @@
 package me.disturbo.types;
 
 import me.disturbo.main.MainActivity;
-import me.disturbo.main.DataManager;
+import me.disturbo.data.DataManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,15 +24,15 @@ public class Trainer {
                                            "items", "doubleBattle", "aiFlags", "partySize", "party"};
 
 
-    public String key, partyFlags, trainerClass, music, gender, trainerPic, trainerName, partySize, partyName;
+    public String name, trainerClass, music, gender, trainerPic, trainerName;
     public ArrayList<String> items;
     public boolean doubleBattle;
     public ArrayList<String> aiFlags;
-    public LinkedList<PartyMember> party;
+    public Party party;
 
-    public Trainer(String key, HashMap<String, String> values){
-        this.key = key;
-        partyFlags = values.get("partyFlags");
+    public Trainer(String name, HashMap<String, String> values){
+        this.name = name;
+
         trainerClass = values.get("trainerClass");
         music = extractMusic(values.get("encounterMusic_gender"));
         gender = extractGender(values.get("encounterMusic_gender"));
@@ -41,9 +41,10 @@ public class Trainer {
         items = extractItems(values.get("items"));
         doubleBattle = Boolean.parseBoolean(values.get("doubleBattle"));
         aiFlags = extractAiFlags(values.get("aiFlags"));
-        partySize = values.get("partySize");
-        partyName = extractPartyName(values.get("party"));
-        party = DataManager.loadParty(partyName);
+        String partyFlags = values.get("partyFlags"),
+               partySize = values.get("partySize"),
+               partyName = Party.extractPartyName(values.get("party"));
+        party = DataManager.loadParty(partyFlags, partySize, partyName);
     }
 
     public static final HashMap<String, String> templateValues(){
@@ -120,60 +121,10 @@ public class Trainer {
         return flags;
     }
 
-    private final String extractPartyName(String name){
-        return name.split("=")[1].replace("}", "");
-    }
-
-    private final String buildPartyName(){
-        return "{." + getPartyType().substring("TrainerMon".length()) + " = " + partyName + "}";
-    }
-
-    public final String getPartyType(){
-        String partyType = "TrainerMon";
-        if(!partyHasCustomItems()) partyType += "No";
-        partyType += "Item";
-        if(!partyHasCustomMoves()) partyType += "Default";
-        else partyType += "Custom";
-        partyType += "Moves";
-        return partyType;
-    }
-
-    public final String getPartyFlags(){
-        String partyType = "0";
-        if(partyHasCustomItems()) partyType = "F_TRAINER_PARTY_HELD_ITEM";
-        if(partyHasCustomMoves()){
-            if(partyType.equals("0")) partyType = "F_TRAINER_PARTY_CUSTOM_MOVESET";
-            else partyType += " | F_TRAINER_PARTY_CUSTOM_MOVESET";
-        }
-        return partyType;
-    }
-
-    public final boolean partyHasCustomMoves(){
-        boolean hasCustomMoves = false;
-        for(PartyMember member : party){
-            if(member.hasCustomMoves()){
-                hasCustomMoves = true;
-                break;
-            }
-        }
-        return hasCustomMoves;
-    }
-
-    public final boolean partyHasCustomItems(){
-        boolean hasCustomItems = false;
-        for(PartyMember member : party){
-            if(member.heldItem != MainActivity.items.get(0)){
-                hasCustomItems = true;
-                break;
-            }
-        }
-        return hasCustomItems;
-    }
-
     public final String buildTrainerStruct(){
-        String struct = "    [" + key + "] =" + System.lineSeparator();
+        String struct = "    [" + name + "] =" + System.lineSeparator();
         struct += "    {" + System.lineSeparator();
-        struct += "        .partyFlags = " + getPartyFlags() + "," + System.lineSeparator();
+        struct += "        .partyFlags = " + party.getPartyFlags() + "," + System.lineSeparator();
         struct += "        .trainerClass = " + trainerClass + "," + System.lineSeparator();
         struct += "        .encounterMusic_gender = " + buildMusicGender() + "," + System.lineSeparator();
         struct += "        .trainerPic = " + trainerPic + "," + System.lineSeparator();
@@ -181,20 +132,9 @@ public class Trainer {
         struct += "        .items = " + buildTrainerItems() + "," + System.lineSeparator();
         struct += "        .doubleBattle = " + buildDoubleBattle() + "," + System.lineSeparator();
         struct += "        .aiFlags = " + buildAiFlags() + "," + System.lineSeparator();
-        struct += "        .partySize = " + partySize + "," + System.lineSeparator();
-        struct += "        .party = " + buildPartyName() + "," + System.lineSeparator();
+        struct += "        .partySize = " + party.size + "," + System.lineSeparator();
+        struct += "        .party = " + party.buildPartyName() + "," + System.lineSeparator();
         struct += "    }," + System.lineSeparator() + System.lineSeparator();
-        return struct;
-    }
-
-    public final String buildPartyStruct(){
-        String struct = "static const struct " + getPartyType() + " " + partyName + "[] = {" + System.lineSeparator();
-        for(int index = 0; index < party.size(); index++){
-            struct += party.get(index).buildMemberStruct(partyHasCustomItems(), partyHasCustomMoves());
-            if(index < party.size() - 1) struct += ",";
-            struct += System.lineSeparator();
-        }
-        struct += "};" + System.lineSeparator();
         return struct;
     }
 }

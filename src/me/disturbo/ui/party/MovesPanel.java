@@ -18,23 +18,18 @@ public class MovesPanel extends JPanel {
         setBackground(Color.WHITE);
         GridBagConstraints cons = new GridBagConstraints();
         cons.gridx = 0; cons.gridy = 0; cons.weightx = 1;
-        cons.fill = GridBagConstraints.BOTH;
+        cons.fill = GridBagConstraints.HORIZONTAL;
         cons.anchor = GridBagConstraints.LINE_START;
 
-        JLabel movesLabel = new JLabel("Moves");
+        JLabel movesLabel = new JLabel("Moves: ");
         movesLabel.setHorizontalAlignment(JLabel.LEFT);
         add(movesLabel, cons);
 
-        LinkedList<String> values = new LinkedList<>(MainActivity.moves.values());
         for(int index = 0; index < MainActivity.MOVES_MAX; index++){
-            cons.gridy++; add(Box.createVerticalStrut(10), cons);
-
             MovePanel movePanel = new MovePanel();
             movesPanels[index] = movePanel;
             cons.gridy++; add(movePanel, cons);
         }
-
-        cons.gridy++; add(Box.createVerticalStrut(10), cons);
     }
 
     public String getMove(int index){

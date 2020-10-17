@@ -6,7 +6,6 @@ import me.disturbo.ui.MainFrame;
 
 import javax.swing.*;
 import java.io.File;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
@@ -24,13 +23,13 @@ public class MainActivity {
     public static final int MOVES_MAX = 4;
 
     public static String currentTrainer = null;
-    public static HashMap<String, Integer> trainerIndexes, partyIndexes;
-    public static HashMap<String, TrainerClass> trainerClasses;
+    public static LinkedHashMap<String, Integer> trainerIndexes, partyIndexes;
+    public static LinkedHashMap<String, TrainerClass> trainerClasses;
     public static LinkedList<String> items;
-    public static HashMap<String, String> moves, species;
+    public static LinkedHashMap<String, String> moves, species;
     public static LinkedList<String> music, aiFlags, picList;
-    public static HashMap<String, String> picPaths;
-    public static HashMap<String, Trainer> loadedTrainers = new LinkedHashMap<>();
+    public static LinkedHashMap<String, String> picPaths;
+    public static LinkedHashMap<String, Trainer> loadedTrainers = new LinkedHashMap<>();
 
     public static void main(String[] args){
         // Ensure MainFrame runs on an Event Dispatch Thread

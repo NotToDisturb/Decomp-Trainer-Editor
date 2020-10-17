@@ -49,69 +49,59 @@ public class PartyMemberPanel extends JPanel{
         createSpecies(general, cons);
         createHeldItem(general, cons);
 
-        cons.gridx++;
-        cons.gridy = 0;
+        cons.gridx++; cons.gridy = 0;
         general.add(Box.createRigidArea(new Dimension(20, 5)), cons);
 
 
         JPanel moves = new JPanel();
         moves.setBackground(Color.WHITE);
         moves.setLayout(new GridBagLayout());
-        cons.gridx = 0;
-        moves.add(Box.createVerticalStrut(5), cons);
+
+        cons.gridx = 0; moves.add(Box.createVerticalStrut(5), cons);
         createMoves(moves, cons);
 
-        cons.gridx++;
-        cons.gridy = 0;
+        cons.gridx++; cons.gridy = 0;
         moves.add(Box.createRigidArea(new Dimension(10, 5)), cons);
 
         add(general); add(moves);
     }
 
     private final void createIv(JPanel panel, GridBagConstraints cons){
-        cons.gridy++;
         JLabel ivLabel = new JLabel("IVs: ");
         ivLabel.setHorizontalAlignment(JLabel.LEFT);
-        panel.add(ivLabel, cons);
+        cons.gridy++; panel.add(ivLabel, cons);
 
-        cons.gridy++;
-        panel.add(Box.createVerticalStrut(5), cons);
+        cons.gridy++; panel.add(Box.createVerticalStrut(5), cons);
 
-        cons.gridy++;
+
         iv = new JTextField();
         iv.setDocument(new TextFieldLimiter(-1, 256));
-        panel.add(iv, cons);
+        cons.gridy++; panel.add(iv, cons);
 
-        cons.gridy++;
-        panel.add(Box.createVerticalStrut(10), cons);
+        cons.gridy++; panel.add(Box.createVerticalStrut(10), cons);
     }
 
     private final void createLevel(JPanel panel, GridBagConstraints cons){
-        cons.gridy++;
         JLabel levelLabel = new JLabel("Level: ");
         levelLabel.setHorizontalAlignment(JLabel.LEFT);
-        panel.add(levelLabel, cons);
+        cons.gridy++; panel.add(levelLabel, cons);
 
-        cons.gridy++;
-        panel.add(Box.createVerticalStrut(5), cons);
+        cons.gridy++; panel.add(Box.createVerticalStrut(5), cons);
 
-        cons.gridy++;
+
         level = new JTextField();
         level.setDocument(new TextFieldLimiter(-1, 255));
-        panel.add(level, cons);
+        cons.gridy++; panel.add(level, cons);
 
-        cons.gridy++;
-        panel.add(Box.createVerticalStrut(10), cons);
+        cons.gridy++; panel.add(Box.createVerticalStrut(10), cons);
     }
 
     private final void createSpecies(JPanel panel, GridBagConstraints cons){
-        cons.gridy++;
         JLabel speciesLabel = new JLabel("Species: ");
         speciesLabel.setHorizontalAlignment(JLabel.LEFT);
-        panel.add(speciesLabel, cons);
+        cons.gridy++; panel.add(speciesLabel, cons);
 
-        cons.gridy++;
-        panel.add(Box.createVerticalStrut(5), cons);
+        cons.gridy++; panel.add(Box.createVerticalStrut(5), cons);
 
         LinkedList<String> keys = new LinkedList<>(MainActivity.species.keySet());
         species = new ComboBoxFiltered(keys, keys.get(0), new AlphanumericUnderscoreFilter());
@@ -123,27 +113,23 @@ public class PartyMemberPanel extends JPanel{
                 frame.repaint();
             }
         });
-        panel.add(species, cons);
+        cons.gridy++; panel.add(species, cons);
 
-        cons.gridy++;
-        panel.add(Box.createVerticalStrut(10), cons);
+        cons.gridy++; panel.add(Box.createVerticalStrut(10), cons);
     }
 
     private final void createHeldItem(JPanel panel, GridBagConstraints cons){
-        cons.gridy++;
         JLabel itemLabel = new JLabel("Held item: ");
         itemLabel.setHorizontalAlignment(JLabel.LEFT);
-        panel.add(itemLabel, cons);
+        cons.gridy++; panel.add(itemLabel, cons);
 
-        cons.gridy++;
-        panel.add(Box.createVerticalStrut(5), cons);
+        cons.gridy++; panel.add(Box.createVerticalStrut(5), cons);
 
         heldItem = new ComboBoxFiltered(MainActivity.items, MainActivity.items.get(0), new AlphanumericUnderscoreFilter());
         heldItem.setPrototypeDisplayValue(Utils.getLongestString(MainActivity.items.toArray(new String[0])));
-        panel.add(heldItem, cons);
+        cons.gridy++; panel.add(heldItem, cons);
 
-        cons.gridy++;
-        panel.add(Box.createVerticalStrut(10), cons);
+        cons.gridy++; panel.add(Box.createVerticalStrut(10), cons);
     }
 
     private final void createMoves(JPanel panel, GridBagConstraints cons){

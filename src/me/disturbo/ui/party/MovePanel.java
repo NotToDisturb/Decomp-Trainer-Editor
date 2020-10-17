@@ -23,7 +23,7 @@ public class MovePanel extends JPanel {
         cons.fill = GridBagConstraints.BOTH;
         cons.anchor = GridBagConstraints.LINE_START;
 
-        cons.gridy++; add(Box.createVerticalStrut(10), cons);
+        cons.gridy++; add(Box.createVerticalStrut(5), cons);
 
         cons.fill = GridBagConstraints.NONE;
         LinkedList<String> values = new LinkedList<>(MainActivity.moves.values());

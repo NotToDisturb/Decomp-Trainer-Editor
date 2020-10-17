@@ -3,7 +3,7 @@ package me.disturbo.ui.list;
 import me.disturbo.main.MainActivity;
 import me.disturbo.main.Utils;
 import me.disturbo.ui.MainFrame;
-import me.disturbo.main.DataManager;
+import me.disturbo.data.DataManager;
 
 import javax.swing.*;
 

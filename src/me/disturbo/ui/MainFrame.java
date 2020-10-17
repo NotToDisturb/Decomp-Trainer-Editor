@@ -6,11 +6,12 @@ import me.disturbo.ui.ai.AiFlagsPanel;
 import me.disturbo.ui.list.TrainerListPanel;
 import me.disturbo.ui.party.PartyPanel;
 import me.disturbo.ui.trainer.TrainerPanel;
-import me.disturbo.main.DataManager;
+import me.disturbo.data.DataManager;
 import me.disturbo.main.DirectoryChooser;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.LinkedList;
 
 public class MainFrame extends JFrame {
     /*
@@ -79,9 +80,24 @@ public class MainFrame extends JFrame {
             //If there is a loaded trainer, allow saving trainers
             if(MainActivity.currentTrainer != null){
                 saveTrainerData(MainActivity.currentTrainer);
+                LinkedList<Trainer> saveQueue = new LinkedList<>();
                 for(Trainer trainer : MainActivity.loadedTrainers.values()){
-                    DataManager.saveTrainer(trainer);
+                    if(saveQueue.isEmpty()) saveQueue.add(trainer);
+                    else {
+                        boolean inserted = false;
+                        for(int insertionIndex = 0; insertionIndex < saveQueue.size(); insertionIndex++){
+                            int savingIndex = MainActivity.trainerIndexes.get(trainer.name);
+                            int savedIndex = MainActivity.trainerIndexes.get(saveQueue.get(insertionIndex).name);
+                            if(savingIndex < savedIndex){
+                                saveQueue.add(insertionIndex, trainer);
+                                inserted = true;
+                                break;
+                            }
+                        }
+                        if(!inserted) saveQueue.add(trainer);
+                    }
                 }
+                DataManager.saveTrainers(saveQueue);
             }
         });
         JMenuItem exit = new JMenuItem("Exit");

@@ -52,12 +52,11 @@ public class PartyPanel extends JPanel {
     public final void saveTrainerPartyData(Trainer trainer){
         savePartyMemberData(currentLoaded);
 
-        LinkedList<PartyMember> party = new LinkedList<>();
+        trainer.party.clear();
         DefaultListModel<PartyMember> model = partyMemberListPanel.generateModel();
         for(int memberIndex = 0; memberIndex < partyMemberListPanel.getMembersCount(); memberIndex++){
-            party.add(model.get(memberIndex));
+            trainer.party.add(model.get(memberIndex));
         }
-        trainer.party = party;
     }
     
     public final void savePartyMemberData(PartyMember member){
