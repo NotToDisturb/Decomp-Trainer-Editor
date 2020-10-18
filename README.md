@@ -3,9 +3,11 @@ DTE allows you to modify every trainer's properties (and there are around 850 of
 
 ## Functionalities
 ![Trainer list](https://i.imgur.com/mg6ORE4.png)
+
 Trainer searching: Shown trainers are filtered from text in the field below the list
 
 ![General trainer editing](https://i.imgur.com/EAP3Hfe.png)![enter image description here](https://i.imgur.com/bJQDbaP.png)
+
 Trainer editing:
  - Names: Named displayed ingame (no internal name editing as of yet)
  - Trainer class: Changes the class text shown ingame and victory money gains
@@ -17,6 +19,7 @@ Trainer editing:
  - AI:  Changes the trainer's behaviour. Includes some not targeted towards trainers.
 
 ![enter image description here](https://i.imgur.com/fJ4bhnJ.png)
+
 Party editing:
  - Addition and deletion of party members: Up to a maximum of `PARTY_MAX` and a minimum of 1
  - Party member order
