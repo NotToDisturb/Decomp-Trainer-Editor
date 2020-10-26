@@ -23,7 +23,7 @@ public class TrainersComposer implements IndexedOrderedComposer<Trainer> {
 
     @Override
     public void finalize(LinkedList<Trainer> trainers) {
-        DataManager.indexTrainers();
+        MainActivity.trainerIndexes = DataManager.indexTrainers();
         LinkedList<Party> saveQueue = new LinkedList<>();
         for(Trainer trainer : trainers){
             if(saveQueue.isEmpty()) saveQueue.add(trainer.party);

@@ -21,6 +21,6 @@ public class PartiesComposer implements IndexedOrderedComposer<Party> {
 
     @Override
     public void finalize(LinkedList<Party> trainers) {
-        DataManager.indexParties();
+        MainActivity.partyIndexes = DataManager.indexParties();
     }
 }

@@ -55,7 +55,7 @@ public class Party extends LinkedList<PartyMember> {
     public final boolean partyHasCustomItems(){
         boolean hasCustomItems = false;
         for(PartyMember member : this){
-            if(member.heldItem != MainActivity.items.get(0)){
+            if(!member.heldItem.equals(MainActivity.items.get(0))){
                 hasCustomItems = true;
                 break;
             }
@@ -70,7 +70,7 @@ public class Party extends LinkedList<PartyMember> {
             if(index < size() - 1) struct += ",";
             struct += System.lineSeparator();
         }
-        struct += "};" + System.lineSeparator();
+        struct += "};" + System.lineSeparator() + System.lineSeparator();
         return struct;
     }
 }

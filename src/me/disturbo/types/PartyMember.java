@@ -68,7 +68,7 @@ public class PartyMember {
     public final boolean hasCustomMoves(){
         boolean hasCustomMoves = false;
         for (int index = 0; index < this.moves.size(); index++) {
-            if(!moves.get(index).equals(MainActivity.moves.get(0))) hasCustomMoves = true;
+            if(!moves.get(index).equals(MainActivity.moves.keySet().toArray(new String[0])[0])) hasCustomMoves = true;
         }
         return hasCustomMoves;
     }
