@@ -33,7 +33,7 @@ public class MovesPanel extends JPanel {
     }
 
     public String getMove(int index){
-        return movesPanels[index].getSelectedItem().toString();
+        return movesPanels[index].getSelectedItem();
     }
 
     public void setMove(int index, String move){
