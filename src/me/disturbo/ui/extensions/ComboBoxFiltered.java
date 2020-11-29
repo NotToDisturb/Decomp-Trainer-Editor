@@ -62,7 +62,11 @@ public class ComboBoxFiltered extends JComboBox<String>{
             @Override
             public void focusGained(FocusEvent e) {
                 // Base case
-                if(!showAll.equals("")) setModel(new DefaultComboBoxModel(getFilteredElements(field.getText())));
+                if(!showAll.equals("")){
+                    String text = field.getText();
+                    setModel(new DefaultComboBoxModel(getFilteredElements(field.getText())));
+                    setSelectedItem(text);
+                }
                 setPopupVisible(true);
             }
 
@@ -103,7 +107,7 @@ public class ComboBoxFiltered extends JComboBox<String>{
         String[] filtered = getFilteredElements(text);
         if(filtered.length == 0) filtered = elements.toArray(new String[0]);
         if(!showAll.equals("")) setModel(new DefaultComboBoxModel(filtered));
-        setSelectedItem(filtered[0]);
+        setSelectedItem(this.elements.contains(text) ? text : filtered[0]);
     }
 
     private final String[] getFilteredElements(String text){

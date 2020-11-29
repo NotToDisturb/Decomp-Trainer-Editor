@@ -165,6 +165,5 @@ public class PartyMemberPanel extends JPanel{
             moves.add(keys.get(indexOfMove));
         }
         member.moves = moves;
-        System.out.println(member.species + " " + member.heldItem.equals(""));
     }
 }
