@@ -42,25 +42,18 @@ public class Party extends LinkedList<PartyMember> {
     }
 
     public final boolean partyHasCustomMoves(){
-        boolean hasCustomMoves = false;
         for(PartyMember member : this){
-            if(member.hasCustomMoves()){
-                hasCustomMoves = true;
-                break;
-            }
+            if(member.hasCustomMoves()) return true;
         }
-        return hasCustomMoves;
+        return false;
     }
 
     public final boolean partyHasCustomItems(){
-        boolean hasCustomItems = false;
+        String noItem = MainActivity.items.get(0);
         for(PartyMember member : this){
-            if(!member.heldItem.equals(MainActivity.items.get(0))){
-                hasCustomItems = true;
-                break;
-            }
+            if(!member.heldItem.equals(noItem)) return true;
         }
-        return hasCustomItems;
+        return false;
     }
 
     public final String buildPartyStruct(){

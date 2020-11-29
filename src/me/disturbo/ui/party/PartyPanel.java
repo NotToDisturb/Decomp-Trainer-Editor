@@ -50,7 +50,7 @@ public class PartyPanel extends JPanel {
     }
 
     public final void saveTrainerPartyData(Trainer trainer){
-        savePartyMemberData(currentLoaded);
+        memberPanel.savePartyMemberData(currentLoaded);
 
         trainer.party.clear();
         DefaultListModel<PartyMember> model = partyMemberListPanel.generateModel();
@@ -58,13 +58,9 @@ public class PartyPanel extends JPanel {
             trainer.party.add(model.get(memberIndex));
         }
     }
-    
-    public final void savePartyMemberData(PartyMember member){
-        memberPanel.savePartyMemberData(member);
-    }
 
     public final void switchPartyMemberData(PartyMember newMember){
-        savePartyMemberData(currentLoaded);
+        memberPanel.savePartyMemberData(currentLoaded);
         loadPartyMemberData(newMember);
     }
 }

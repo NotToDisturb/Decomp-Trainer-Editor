@@ -24,7 +24,6 @@ public class PartyMember {
     public PartyMember(String species){
         iv = "0";
         level = "0";
-        LinkedList<String> keys = new LinkedList<>(MainActivity.species.keySet());
         this.species = species;
         heldItem = MainActivity.items.get(0);
         moves = new ArrayList<>();
@@ -39,7 +38,7 @@ public class PartyMember {
         iv = values.get("iv");
         level = values.get("lvl");
         species = values.get("species");
-        heldItem = values.get("heldItem");
+        heldItem = values.get("heldItem").equals("") ? MainActivity.items.get(0) : values.get("heldItem");
         moves = extractMoves(values.get("moves"));
     }
 
@@ -66,11 +65,11 @@ public class PartyMember {
     }
 
     public final boolean hasCustomMoves(){
-        boolean hasCustomMoves = false;
+        String noMove = MainActivity.moves.keySet().toArray(new String[0])[0];
         for (int index = 0; index < this.moves.size(); index++) {
-            if(!moves.get(index).equals(MainActivity.moves.keySet().toArray(new String[0])[0])) hasCustomMoves = true;
+            if(!moves.get(index).equals(noMove)) return true;
         }
-        return hasCustomMoves;
+        return false;
     }
 
     public final String buildMemberStruct(boolean partyHasCustomItems, boolean partyHasCustomMoves){
